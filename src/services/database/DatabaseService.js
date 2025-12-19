@@ -1,10 +1,14 @@
 const Database = require('better-sqlite3')
 const path = require('path')
-const { app } = require('electron')
+const fs = require('fs');
 
 class DatabaseService {
   constructor() {
-    this.db = null
+    const userDataPath = require('electron').app.getPath('userData');
+    const dbPath = path.join(userDataPath, 'cendrive.db')
+    this.db = new Database(dbPath)
+    this.db.pragma('journal_mode = WAL');
+    this.db.pragma('foreign_keys = ON');
     this.initialized = false
   }
 
@@ -13,14 +17,8 @@ class DatabaseService {
     if (this.initialized) return
     
     try {
-      const userDataPath = app.getPath('userData')
-      const dbPath = path.join(userDataPath, 'cendrive.db')
-      
-      this.db = new Database(dbPath)
-      db.pragma('journal_mode = WAL');
       this.createTables()
       this.initialized = true
-      console.log('Database initialized at:', dbPath)
     } catch (error) {
       console.error('Database initialization error:', error)
       throw error

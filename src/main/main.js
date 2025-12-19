@@ -22,8 +22,9 @@ function createWindow() {
       sandbox: true,
       defaultFontSize: 12
     },
+    icon: path.join(__dirname, '../../icons/cendrive.ico'),
     show: false,
-    backgroundColor: '#1a1a2e',
+    backgroundColor: '#fff',
     titleBarStyle: 'hiddenInset',
     frame: true
   });

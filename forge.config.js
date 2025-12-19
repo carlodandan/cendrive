@@ -17,6 +17,8 @@ module.exports = {
     {
       name: '@electron-forge/maker-squirrel',
       config: {
+        iconUrl: 'https://raw.githubusercontent.com/carlodandan/cendrive/refs/heads/main/icons/cendrive.ico',
+        setupIcon: 'icons/cendrive.ico',
         certificateFile: './cert/cendrive.pfx',
         certificatePassword: process.env.CERTIFICATE_PASSWORD
       }

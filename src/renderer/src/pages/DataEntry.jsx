@@ -238,12 +238,12 @@ const DataEntry = () => {
   }
 
   return (
-    <div className="h-screen w-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col overflow-hidden select-none">
+    <div className="h-screen w-screen bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col overflow-hidden select-none">
       {/* Windows-style Title Bar */}
       <div className="h-10 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-4">
         <div className="flex items-center space-x-3">
           <Link to="/dashboard" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            <div className="w-6 h-6 bg-gradient-to-br from-cyan-500 to-blue-600 rounded flex items-center justify-center">
+            <div className="w-6 h-6 bg-linear-to-br from-cyan-500 to-blue-600 rounded flex items-center justify-center">
               <Menu className="w-4 h-4 text-white" />
             </div>
             <span className="text-gray-300 font-medium text-sm">Cendrive • Data Entry</span>
@@ -262,7 +262,7 @@ const DataEntry = () => {
         {/* Left Sidebar - Navigation */}
         <div className="w-64 bg-gray-800/50 border-r border-gray-700 p-6">
           <div className="mb-8">
-            <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-linear-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center mb-4">
               <Edit2 className="w-7 h-7 text-white" />
             </div>
             <h3 className="text-gray-300 font-semibold mb-2">Data Entry</h3>
@@ -328,7 +328,7 @@ const DataEntry = () => {
           <div className="max-w-6xl mx-auto">
             {/* Header */}
             <div className="mb-8">
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
+              <h1 className="text-4xl font-bold bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
                 Census Data Entry
               </h1>
               <p className="text-gray-400">
@@ -362,7 +362,7 @@ const DataEntry = () => {
 
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Personal Information Card */}
-              <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-6">
+              <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-semibold text-gray-300">
                     <div className="flex items-center">
@@ -434,7 +434,7 @@ const DataEntry = () => {
               </div>
 
               {/* Address Information Card */}
-              <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-6">
+              <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-semibold text-gray-300">
                     <div className="flex items-center">
@@ -611,7 +611,7 @@ const DataEntry = () => {
               </div>
 
               {/* Contact Information Card */}
-              <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-6">
+              <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-semibold text-gray-300">
                     <div className="flex items-center">
@@ -651,7 +651,7 @@ const DataEntry = () => {
               </div>
 
               {/* Family Composition Card */}
-              <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-6">
+              <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-semibold text-gray-300">
                     <div className="flex items-center">
@@ -735,7 +735,7 @@ const DataEntry = () => {
                     type="button"
                     onClick={addFamilyMember}
                     disabled={!newMember.firstName.trim() || !newMember.lastName.trim() || !newMember.relationship}
-                    className="mt-4 px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-medium rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="mt-4 px-4 py-2 bg-linear-to-r from-cyan-600 to-blue-700 text-white font-medium rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Plus className="w-5 h-5 mr-2" />
                     Add Member
@@ -749,7 +749,7 @@ const DataEntry = () => {
                     {familyMembers.map((member) => (
                       <div key={member.id} className="flex items-center justify-between p-4 bg-gray-800/30 rounded-lg border border-gray-700">
                         <div className="flex items-center">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center mr-4">
+                          <div className="w-10 h-10 rounded-full bg-linear-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center mr-4">
                             <User className="w-5 h-5 text-cyan-400" />
                           </div>
                           <div>
@@ -803,7 +803,7 @@ const DataEntry = () => {
                   <button
                     type="submit"
                     disabled={dbLoading || !formData.region || !formData.province || !formData.town}
-                    className="px-8 py-3 bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-semibold rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/20 border border-cyan-500/30 flex items-center disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="px-8 py-3 bg-linear-to-r from-cyan-600 to-blue-700 text-white font-semibold rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/20 border border-cyan-500/30 flex items-center disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
                     {dbLoading ? (
                       <>

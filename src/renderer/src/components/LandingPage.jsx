@@ -40,7 +40,7 @@ const LandingPage = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col items-center justify-center p-8 overflow-hidden">
+    <div className="min-h-screen bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col items-center justify-center p-8 overflow-hidden">
       {/* Animated Waves */}
       <div className="relative w-96 h-96 flex items-center justify-center">
         {waves.map((wave) => (
@@ -59,9 +59,9 @@ const LandingPage = () => {
         
         {/* Database Icon */}
         <div className="relative z-10">
-          <div className="w-48 h-64 bg-gradient-to-b from-cyan-500 to-blue-600 rounded-lg flex flex-col items-center justify-center p-6 shadow-2xl shadow-cyan-500/30 border-2 border-cyan-400/50">
+          <div className="w-48 h-64 bg-linear-to-b from-cyan-500 to-blue-600 rounded-lg flex flex-col items-center justify-center p-6 shadow-2xl shadow-cyan-500/30 border-2 border-cyan-400/50">
             {/* Database Cylinder */}
-            <div className="w-40 h-32 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-t-lg relative overflow-hidden">
+            <div className="w-40 h-32 bg-linear-to-b from-cyan-400 to-blue-500 rounded-t-lg relative overflow-hidden">
               {/* Database rings */}
               <div className="absolute top-4 left-0 right-0 h-1 bg-cyan-300/50"></div>
               <div className="absolute top-12 left-0 right-0 h-1 bg-cyan-300/50"></div>
@@ -75,7 +75,7 @@ const LandingPage = () => {
             </div>
             
             {/* Database Base */}
-            <div className="w-44 h-8 bg-gradient-to-b from-blue-600 to-blue-800 rounded-b-lg"></div>
+            <div className="w-44 h-8 bg-linear-to-b from-blue-600 to-blue-800 rounded-b-lg"></div>
             
             {/* Shine effect */}
             <div className="absolute top-2 left-4 w-16 h-3 bg-cyan-300/20 rounded-full blur-sm"></div>
@@ -85,7 +85,7 @@ const LandingPage = () => {
 
       {/* App Title */}
       <div className="text-center">
-        <h1 className="text-6xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-4 tracking-tight">
+        <h1 className="text-6xl font-bold bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-4 tracking-tight">
           <span className="text-amber-300">Cen</span>Drive
         </h1>
         <p className="text-xl text-cyan-200/80 mb-2 font-light">
@@ -99,7 +99,7 @@ const LandingPage = () => {
       {/* Get Started Button - Now using Link */}
       <Link
         to="/dashboard"
-        className="mt-4 px-12 py-4 bg-gradient-to-r from-cyan-600 to-blue-700 text-white text-xl font-semibold rounded-xl hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/30 border-2 border-cyan-400/30 inline-flex items-center space-x-3"
+        className="mt-4 px-12 py-4 bg-linear-to-r from-cyan-600 to-blue-700 text-white text-xl font-semibold rounded-xl hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/30 border-2 border-cyan-400/30 inline-flex items-center space-x-3"
       >
         <span>Get Started</span>
         <svg className="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">

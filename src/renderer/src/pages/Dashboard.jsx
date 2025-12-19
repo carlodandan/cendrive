@@ -140,12 +140,12 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="h-screen w-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col overflow-hidden select-none">
+    <div className="h-screen w-screen bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col overflow-hidden select-none">
       {/* Windows-style Title Bar */}
       <div className="h-10 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-4">
         <div className="flex items-center space-x-3">
           <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            <div className="w-6 h-6 bg-gradient-to-br from-cyan-500 to-blue-600 rounded flex items-center justify-center">
+            <div className="w-6 h-6 bg-linear-to-br from-cyan-500 to-blue-600 rounded flex items-center justify-center">
               <Menu className="w-4 h-4 text-white" />
             </div>
             <span className="text-gray-300 font-medium text-sm"><span className="text-amber-300">Cen</span>Drive v1.0</span>
@@ -158,7 +158,7 @@ const Dashboard = () => {
         {/* Left Sidebar - Navigation */}
         <div className="w-64 bg-gray-800/50 border-r border-gray-700 p-6">
           <div className="mb-8">
-            <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center mb-4">
+            <div className="w-12 h-12 bg-linear-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center mb-4">
               <Database className="w-7 h-7 text-white" />
             </div>
             <h3 className="text-gray-300 font-semibold mb-2"><span className="text-amber-300">Cen</span>Drive</h3>
@@ -235,7 +235,7 @@ const Dashboard = () => {
             <div className="mb-8">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
+                  <h1 className="text-4xl font-bold bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
                     <span className="text-amber-300">Cen</span>Drive
                   </h1>
                   <p className="text-gray-400">
@@ -267,7 +267,7 @@ const Dashboard = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-6 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-medium rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                    className="px-6 py-2.5 bg-linear-to-r from-cyan-600 to-blue-700 text-white font-medium rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
                   >
                     <Search className="w-4 h-4" />
                     <span>{loading ? 'Searching...' : 'Search'}</span>
@@ -305,7 +305,7 @@ const Dashboard = () => {
                         {/* Name Column */}
                         <div className="col-span-3">
                           <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 rounded-lg flex items-center justify-center border border-cyan-500/30">
+                            <div className="w-10 h-10 bg-linear-to-br from-cyan-500/20 to-blue-600/20 rounded-lg flex items-center justify-center border border-cyan-500/30">
                               <span className="text-cyan-300 font-bold">
                                 {household.first_name?.charAt(0) || ''}{household.last_name?.charAt(0) || ''}
                               </span>
@@ -417,7 +417,7 @@ const Dashboard = () => {
                               {expandedHouseholdDetails[household.id].familyMembers.map((member, index) => (
                                 <div key={member.id || index} className="bg-gray-800/30 rounded-lg p-4 border border-gray-700">
                                   <div className="flex items-center space-x-3 mb-3">
-                                    <div className="w-8 h-8 bg-gradient-to-br from-gray-700 to-gray-800 rounded-full flex items-center justify-center border border-gray-600">
+                                    <div className="w-8 h-8 bg-linear-to-br from-gray-700 to-gray-800 rounded-full flex items-center justify-center border border-gray-600">
                                       <span className="text-gray-300 text-xs font-bold">
                                         {member.first_name?.charAt(0) || ''}{member.last_name?.charAt(0) || ''}
                                       </span>
@@ -474,7 +474,7 @@ const Dashboard = () => {
                 {!searchTerm && (
                   <Link
                     to="/data-entry"
-                    className="inline-flex items-center px-8 py-3.5 bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-semibold rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/20 border border-cyan-500/30"
+                    className="inline-flex items-center px-8 py-3.5 bg-linear-to-r from-cyan-600 to-blue-700 text-white font-semibold rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/20 border border-cyan-500/30"
                   >
                     <Plus className="w-5 h-5 mr-3" />
                     Add First Household
@@ -484,7 +484,7 @@ const Dashboard = () => {
             )}
 
             {/* Quick Actions */}
-            <div className="mt-8 p-6 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl border border-gray-700">
+            <div className="mt-8 p-6 bg-linear-to-r from-gray-800/50 to-gray-900/50 rounded-xl border border-gray-700">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-xl font-bold text-gray-300 mb-2">Quick Actions</h3>
@@ -508,7 +508,7 @@ const Dashboard = () => {
                   
                   <Link
                     to="/data-entry"
-                    className="px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-semibold rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20 border border-cyan-500/30 flex items-center space-x-2 text-sm"
+                    className="px-6 py-3 bg-linear-to-r from-cyan-600 to-blue-700 text-white font-semibold rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20 border border-cyan-500/30 flex items-center space-x-2 text-sm"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Add New Record</span>

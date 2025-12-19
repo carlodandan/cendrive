@@ -119,6 +119,26 @@ const Dashboard = () => {
     })
   }
 
+  const [appInfo, setAppInfo] = useState({
+    app: '',
+    runtime: {
+      electron: '',
+      node: '',
+      chrome: '',
+    },
+    libs: {
+      betterSqlite3: '',
+    },
+  });
+
+  useEffect(() => {
+    async function loadInfo() {
+      const info = await window.electronAPI.getAppInfo();
+      setAppInfo(info);
+    }
+    loadInfo();
+  }, []);
+
   return (
     <div className="h-screen w-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col overflow-hidden select-none">
       {/* Windows-style Title Bar */}
@@ -501,21 +521,21 @@ const Dashboard = () => {
             <div className="mt-8 pt-6 border-t border-gray-800">
               <div className="flex items-center justify-between text-gray-500 text-sm">
                 <div className="flex items-center space-x-6">
-                  <span>© 2024 <span className="text-amber-300">Cen</span>Drive Desktop</span>
+                  <span>© {new Date().getFullYear()} <span className="text-amber-300">Cen</span>Drive Desktop</span>
                   <span>•</span>
                   <span>Windows Desktop Application</span>
                   <span>•</span>
-                  <span>Version 1.0.0</span>
+                  <span>Version {appInfo.app} </span>
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2">
                     <Database className="w-4 h-4" />
-                    <span>SQLite v3.40+</span>
+                    <span>SQLite {appInfo.libs.betterSqlite3}</span>
                   </div>
                   <span>•</span>
                   <div className="flex items-center space-x-2">
                     <Cpu className="w-4 h-4" />
-                    <span>Electron v28</span>
+                    <span>Electron {appInfo.runtime.electron}</span>
                   </div>
                 </div>
               </div>

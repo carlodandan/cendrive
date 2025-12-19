@@ -18,6 +18,27 @@ const LandingPage = () => {
     setWaves(waveElements)
   }, [])
 
+  const [appInfo, setAppInfo] = useState({
+    app: '',
+    runtime: {
+      electron: '',
+      node: '',
+      chrome: '',
+    },
+    libs: {
+      betterSqlite3: '',
+    },
+  });
+
+  useEffect(() => {
+    async function loadInfo() {
+      const info = await window.electronAPI.getAppInfo();
+      setAppInfo(info);
+    }
+    loadInfo();
+  }, []);
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col items-center justify-center p-8 overflow-hidden">
       {/* Animated Waves */}
@@ -88,7 +109,7 @@ const LandingPage = () => {
 
       {/* Footer */}
       <div className="mt-16 text-center text-cyan-200/40 text-sm">
-        <p><span className="text-amber-300">Cen</span>Drive v1.0 • Built with Electron & React • Data stays on your device</p>
+        <p><span className="text-amber-300">Cen</span>Drive {appInfo.app} • Built with Electron & React • Data stays on your device</p>
       </div>
     </div>
   )

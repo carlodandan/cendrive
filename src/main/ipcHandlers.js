@@ -1,4 +1,7 @@
 import databaseService from '../services/database/DatabaseService';
+import { app } from 'electron';
+import path from 'path';
+import fs from 'fs';
 
 function setupIpcHandlers(ipcMain) {
   // Save census record
@@ -71,6 +74,23 @@ function setupIpcHandlers(ipcMain) {
       return { success: false, error: error.message }
     }
   })
+
+  ipcMain.handle('get-app-info', () => {
+    const packageJsonPath = path.join(app.getAppPath(), 'package.json');
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+
+    return {
+      app: app.getVersion(),
+      runtime: {
+        electron: process.versions.electron,
+        node: process.versions.node,
+        chrome: process.versions.chrome,
+      },
+      libs: {
+        betterSqlite3: packageJson.dependencies?.['better-sqlite3'] ?? 'unknown',
+      },
+    };
+  });
 }
 
 export default setupIpcHandlers

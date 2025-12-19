@@ -38,5 +38,8 @@ contextBridge.exposeInMainWorld('databaseAPI', {
 
 contextBridge.exposeInMainWorld('electronAPI', {
   platform: process.platform,
-  version: process.versions.electron
+  version: process.versions.electron,
+
+  // Expose App
+  getAppInfo: () => ipcRenderer.invoke('get-app-info')
 })

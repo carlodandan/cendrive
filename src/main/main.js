@@ -16,10 +16,8 @@ function createWindow() {
     maximizable: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: false,
       contextIsolation: true,
       webSecurity: true,
-      sandbox: true,
       defaultFontSize: 12
     },
     icon: path.join(__dirname, '../../icons/cendrive.ico'),

@@ -96,3 +96,8 @@ out/
 
 # Cert
 cert/cendrive.pfx
+
+# Backup
+backup-*
+*.db
+*.sqlite

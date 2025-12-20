@@ -22,6 +22,7 @@ contextBridge.exposeInMainWorld('databaseAPI', {
   
   // Backup database
   backupDatabase: (backupPath) => ipcRenderer.invoke('database:backup', backupPath),
+  exportToExcel: () => ipcRenderer.invoke('database:exportToExcel'),
   
   // Events with proper cleanup
   onDatabaseInitialized: (callback) => {

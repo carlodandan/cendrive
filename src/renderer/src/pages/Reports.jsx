@@ -676,7 +676,7 @@ const Reports = () => {
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2">
                     <Database className="w-4 h-4" />
-                    <span>SQLite Database</span>
+                    <span>SQLite3 Database</span>
                   </div>
                   <span>•</span>
                   <div className="flex items-center space-x-2">

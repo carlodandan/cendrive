@@ -2,6 +2,7 @@ import databaseService from '../services/database/DatabaseService';
 import { app } from 'electron';
 import path from 'path';
 import fs from 'fs';
+import * as XLSX from 'xlsx';
 
 function setupIpcHandlers(ipcMain) {
   // Save census record
@@ -75,6 +76,82 @@ function setupIpcHandlers(ipcMain) {
     }
   })
 
+  // Enhanced IPC handler for full database export
+  ipcMain.handle('database:exportToExcel', async () => {
+    try {
+      const households = databaseService.getAllHouseholds()
+      
+      // Prepare household data for Excel
+      const householdData = households.map(household => ({
+        'Household ID': household.id,
+        'First Name': household.first_name || '',
+        'Middle Name': household.middle_name || '',
+        'Last Name': household.last_name || '',
+        'Extension': household.extension || '',
+        'House No': household.house_no || '',
+        'Street': household.street_name || '',
+        'Barangay': household.barangay || '',
+        'Town': household.town || '',
+        'Province': household.province || '',
+        'Region': household.region || '',
+        'ZIP Code': household.zip_code || '',
+        'Contact Number': household.contact_number || '',
+        'Email Address': household.email_address || '',
+        'Family Members Count': household.family_count || 0,
+        'Created At': household.created_at || '',
+        'Updated At': household.updated_at || ''
+      }))
+      
+      // Prepare family members data
+      const familyMembersData = []
+      let totalFamilyMembers = 0
+      
+      for (const household of households) {
+        const householdDetails = databaseService.getHouseholdById(household.id)
+        if (householdDetails && householdDetails.familyMembers) {
+          householdDetails.familyMembers.forEach(member => {
+            familyMembersData.push({
+              'Member ID': member.id,
+              'Household ID': household.id,
+              'First Name': member.first_name || '',
+              'Last Name': member.last_name || '',
+              'Relationship': member.relationship || '',
+              'Age': member.age || '',
+              'Created At': member.created_at || ''
+            })
+            totalFamilyMembers++
+          })
+        }
+      }
+      
+      // Create workbook
+      const workbook = XLSX.utils.book_new()
+      
+      // Create household sheet
+      const householdSheet = XLSX.utils.json_to_sheet(householdData)
+      XLSX.utils.book_append_sheet(workbook, householdSheet, 'Households')
+      
+      // Create family members sheet
+      const familySheet = XLSX.utils.json_to_sheet(familyMembersData)
+      XLSX.utils.book_append_sheet(workbook, familySheet, 'Family Members')
+      
+      // Generate Excel file buffer
+      const excelBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' })
+      
+      return { 
+        success: true, 
+        excelBuffer,
+        stats: {
+          totalHouseholds: households.length,
+          totalFamilyMembers
+        }
+      }
+    } catch (error) {
+      console.error('Error exporting to Excel:', error)
+      return { success: false, error: error.message }
+    }
+  })
+
   ipcMain.handle('get-app-info', () => {
     const packageJsonPath = path.join(app.getAppPath(), 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
@@ -85,6 +162,8 @@ function setupIpcHandlers(ipcMain) {
         electron: process.versions.electron,
         node: process.versions.node,
         chrome: process.versions.chrome,
+        os_platform: process.platform,
+        os_arch: process.arch
       },
       libs: {
         betterSqlite3: packageJson.dependencies?.['better-sqlite3'] ?? 'unknown',

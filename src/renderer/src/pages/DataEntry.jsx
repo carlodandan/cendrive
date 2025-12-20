@@ -729,7 +729,7 @@ const DataEntry = () => {
                 <div className="flex items-center space-x-2">
                   <CircleHelp className="w-4 h-4 text-gray-500" />
                   <p className="text-gray-400 text-sm">
-                    All data is stored locally on your device using SQLite.
+                    All data is stored locally on your device using SQLite3.
                   </p>
                 </div>
                 <div className="flex space-x-4">

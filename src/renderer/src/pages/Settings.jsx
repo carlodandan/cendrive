@@ -52,30 +52,24 @@ const Settings = () => {
     exportPermission: true
   })
 
-  // Notification Settings
-  const [notificationSettings, setNotificationSettings] = useState({
-    emailNotifications: false,
-    backupReminders: true,
-    newRecordAlerts: true,
-    weeklySummary: false,
-    soundEnabled: true
-  })
-
   // UI/Theme Settings
   const [themeSettings, setThemeSettings] = useState({
     theme: 'dark', // dark, light, system
-    fontSize: 'medium', // small, medium, large
-    density: 'comfortable', // compact, comfortable, spacious
-    animations: true,
-    showStats: true
   })
 
   // App Info
   const [appInfo, setAppInfo] = useState({
-    version: '1.0.0',
-    electron: '',
-    node: '',
-    chrome: '',
+    app: '',
+    runtime: {
+      electron: '',
+      node: '',
+      chrome: '',
+      os_platform: '',
+      os_arch: ''
+    },
+    libs: {
+      betterSqlite3: '',
+    },
     databasePath: '',
     storageUsage: {
       used: '0 MB',
@@ -84,6 +78,15 @@ const Settings = () => {
     },
     lastBackup: 'Never'
   })
+
+    // Load app info on mount
+  useEffect(() => {
+      async function loadInfo() {
+        const info = await window.electronAPI.getAppInfo();
+        setAppInfo(info);
+      }
+      loadInfo();
+    }, []);
 
   // Password state
   const [password, setPassword] = useState({
@@ -104,29 +107,6 @@ const Settings = () => {
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
 
-  // Load app info on mount
-  useEffect(() => {
-    loadAppInfo()
-  }, [])
-
-  const loadAppInfo = async () => {
-    setLoading(true)
-    try {
-      // Load app info from electron
-      const info = await window.electronAPI.getAppInfo()
-      setAppInfo(prev => ({
-        ...prev,
-        version: info.app,
-        electron: info.runtime.electron,
-        node: info.runtime.node,
-        chrome: info.runtime.chrome
-      }))
-    } catch (error) {
-      console.error('Error loading app info:', error)
-    }
-    setLoading(false)
-  }
-
   const handleDatabaseSettingChange = (key, value) => {
     setDatabaseSettings(prev => ({
       ...prev,
@@ -136,13 +116,6 @@ const Settings = () => {
 
   const handlePrivacySettingChange = (key, value) => {
     setPrivacySettings(prev => ({
-      ...prev,
-      [key]: value
-    }))
-  }
-
-  const handleNotificationSettingChange = (key, value) => {
-    setNotificationSettings(prev => ({
       ...prev,
       [key]: value
     }))
@@ -187,21 +160,59 @@ const Settings = () => {
     }
   }
 
-  const exportData = async () => {
+  const exportToExcel = async () => {
     try {
-      // Export data logic
-      alert('Export functionality would be implemented here')
-    } catch (error) {
-      alert(`Export failed: ${error.message}`)
-    }
-  }
+      const exportButton = document.getElementById('export-excel-button')
+      if (exportButton) {
+        exportButton.innerHTML = '<RefreshCw className="w-5 h-5 animate-spin inline mr-2" /> Preparing Excel file...'
+        exportButton.disabled = true
+      }
 
-  const importData = async () => {
-    try {
-      // Import data logic
-      alert('Import functionality would be implemented here')
+      // Get Excel data from database
+      const result = await window.databaseAPI.exportToExcel()
+      
+      if (result.success && result.excelBuffer) {
+        // Convert buffer to blob
+        const blob = new Blob([result.excelBuffer], { 
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+        })
+        
+        // Create download link
+        const link = document.createElement('a')
+        const url = URL.createObjectURL(blob)
+        
+        // Generate filename
+        const date = new Date()
+        const dateStr = date.toISOString().split('T')[0]
+        const timeStr = date.toTimeString().split(' ')[0].replace(/:/g, '-')
+        const filename = `cendrive-database-${dateStr}_${timeStr}.xlsx`
+        
+        link.setAttribute('href', url)
+        link.setAttribute('download', filename)
+        link.style.visibility = 'hidden'
+        
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        
+        // Revoke the object URL
+        URL.revokeObjectURL(url)
+        
+        // Show success message
+        alert(`Successfully exported ${result.stats.totalHouseholds} households with ${result.stats.totalFamilyMembers} family members to Excel file.\n\nFile contains 2 sheets:\n1. Households - All household records\n2. Family Members - All family member records`)
+      } else {
+        throw new Error(result.error || 'Failed to export data')
+      }
     } catch (error) {
-      alert(`Import failed: ${error.message}`)
+      console.error('Export error:', error)
+      alert(`Export failed: ${error.message}`)
+    } finally {
+      // Reset button state
+      const exportButton = document.getElementById('export-excel-button')
+      if (exportButton) {
+        exportButton.innerHTML = '<Download className="w-5 h-5 inline mr-2" /> Export to Excel (.xlsx)'
+        exportButton.disabled = false
+      }
     }
   }
 
@@ -237,14 +248,7 @@ const Settings = () => {
         anonymizeReports: false,
         exportPermission: true
       })
-      
-      setNotificationSettings({
-        emailNotifications: false,
-        backupReminders: true,
-        newRecordAlerts: true,
-        weeklySummary: false,
-        soundEnabled: true
-      })
+
       
       setThemeSettings({
         theme: 'dark',
@@ -663,235 +667,110 @@ const Settings = () => {
                 )}
               </div>
 
-              {/* Notification Settings */}
-              <div className="bg-gray-800/30 rounded-xl border border-gray-700 p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg flex items-center justify-center border border-purple-500/30">
-                      <Bell className="w-6 h-6 text-purple-400" />
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-semibold text-gray-300">Notifications</h2>
-                      <p className="text-gray-400 text-sm">Configure alerts and notifications</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  {[
-                    { key: 'emailNotifications', label: 'Email Notifications', description: 'Receive updates via email' },
-                    { key: 'backupReminders', label: 'Backup Reminders', description: 'Remind about scheduled backups' },
-                    { key: 'newRecordAlerts', label: 'New Record Alerts', description: 'Alert when new records are added' },
-                    { key: 'weeklySummary', label: 'Weekly Summary', description: 'Weekly statistics report' },
-                    { key: 'soundEnabled', label: 'Sound Notifications', description: 'Play sounds for alerts' }
-                  ].map((item) => (
-                    <div key={item.key} className="flex items-center justify-between">
-                      <div>
-                        <h3 className="text-gray-300 font-medium">{item.label}</h3>
-                        <p className="text-gray-500 text-sm">{item.description}</p>
-                      </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={notificationSettings[item.key]}
-                          onChange={(e) => handleNotificationSettingChange(item.key, e.target.checked)}
-                          className="sr-only peer"
-                        />
-                        <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
               {/* UI/Theme Settings */}
               <div className="bg-gray-800/30 rounded-xl border border-gray-700 p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-amber-500/20 to-orange-500/20 rounded-lg flex items-center justify-center border border-amber-500/30">
-                      <Palette className="w-6 h-6 text-amber-400" />
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-semibold text-gray-300">Appearance</h2>
-                      <p className="text-gray-400 text-sm">Customize the look and feel</p>
-                    </div>
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-10 h-10 bg-gradient-to-br from-amber-500/20 to-orange-500/20 rounded-lg flex items-center justify-center border border-amber-500/30">
+                    <Palette className="w-6 h-6 text-amber-400" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-semibold text-gray-300">Appearance</h2>
+                    <p className="text-gray-400 text-sm">Customize the look and feel</p>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    {/* Theme Selection */}
-                    <div>
-                      <label className="block text-gray-300 mb-2">Theme</label>
-                      <div className="flex space-x-3">
-                        {[
-                          { value: 'dark', icon: <Moon className="w-5 h-5" />, label: 'Dark' },
-                          { value: 'light', icon: <Sun className="w-5 h-5" />, label: 'Light' },
-                          { value: 'system', icon: <Monitor className="w-5 h-5" />, label: 'System' }
-                        ].map((theme) => (
-                          <button
-                            key={theme.value}
-                            onClick={() => handleThemeSettingChange('theme', theme.value)}
-                            className={`flex-1 flex flex-col items-center justify-center p-4 rounded-lg border ${
-                              themeSettings.theme === theme.value
-                                ? 'border-cyan-500 bg-cyan-500/10'
-                                : 'border-gray-700 bg-gray-800 hover:bg-gray-700/50'
-                            } transition-colors`}
-                          >
-                            <div className={`mb-2 ${themeSettings.theme === theme.value ? 'text-cyan-400' : 'text-gray-400'}`}>
-                              {theme.icon}
-                            </div>
-                            <span className={`text-sm font-medium ${
-                              themeSettings.theme === theme.value ? 'text-cyan-300' : 'text-gray-300'
-                            }`}>
-                              {theme.label}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Font Size */}
-                    <div>
-                      <label className="block text-gray-300 mb-2">Font Size</label>
-                      <div className="flex space-x-3">
-                        {['small', 'medium', 'large'].map((size) => (
-                          <button
-                            key={size}
-                            onClick={() => handleThemeSettingChange('fontSize', size)}
-                            className={`flex-1 py-3 rounded-lg border ${
-                              themeSettings.fontSize === size
-                                ? 'border-cyan-500 bg-cyan-500/10 text-cyan-300'
-                                : 'border-gray-700 bg-gray-800 hover:bg-gray-700/50 text-gray-300'
-                            } transition-colors font-medium capitalize`}
-                          >
-                            {size}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    {/* UI Density */}
-                    <div>
-                      <label className="block text-gray-300 mb-2">UI Density</label>
-                      <div className="flex space-x-3">
-                        {['compact', 'comfortable', 'spacious'].map((density) => (
-                          <button
-                            key={density}
-                            onClick={() => handleThemeSettingChange('density', density)}
-                            className={`flex-1 py-3 rounded-lg border ${
-                              themeSettings.density === density
-                                ? 'border-cyan-500 bg-cyan-500/10 text-cyan-300'
-                                : 'border-gray-700 bg-gray-800 hover:bg-gray-700/50 text-gray-300'
-                            } transition-colors font-medium capitalize`}
-                          >
-                            {density}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Additional UI Options */}
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="text-gray-300 font-medium">Animations</h3>
-                          <p className="text-gray-500 text-sm">Enable UI animations</p>
+                {/* Theme Selection */}
+                <div>
+                  <label className="block text-gray-300 mb-2">Theme</label>
+                  <div className="flex space-x-3">
+                    {[
+                      { value: 'dark', icon: <Moon className="w-5 h-5" />, label: 'Dark' },
+                      { value: 'light', icon: <Sun className="w-5 h-5" />, label: 'Light' },
+                      { value: 'system', icon: <Monitor className="w-5 h-5" />, label: 'System' }
+                    ].map((theme) => (
+                      <button
+                        key={theme.value}
+                        onClick={() => handleThemeSettingChange('theme', theme.value)}
+                        className={`flex-1 flex flex-col items-center justify-center p-4 rounded-lg border ${
+                          themeSettings.theme === theme.value
+                            ? 'border-cyan-500 bg-cyan-500/10'
+                            : 'border-gray-700 bg-gray-800 hover:bg-gray-700/50'
+                        } transition-colors`}
+                      >
+                        <div
+                          className={`mb-2 ${
+                            themeSettings.theme === theme.value
+                              ? 'text-cyan-400'
+                              : 'text-gray-400'
+                          }`}
+                        >
+                          {theme.icon}
                         </div>
-                        <label className="relative inline-flex items-center cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={themeSettings.animations}
-                            onChange={(e) => handleThemeSettingChange('animations', e.target.checked)}
-                            className="sr-only peer"
-                          />
-                          <div className="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
-                        </label>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="text-gray-300 font-medium">Show Stats</h3>
-                          <p className="text-gray-500 text-sm">Display statistics in sidebar</p>
-                        </div>
-                        <label className="relative inline-flex items-center cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={themeSettings.showStats}
-                            onChange={(e) => handleThemeSettingChange('showStats', e.target.checked)}
-                            className="sr-only peer"
-                          />
-                          <div className="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
-                        </label>
-                      </div>
-                    </div>
+                        <span
+                          className={`text-sm font-medium ${
+                            themeSettings.theme === theme.value
+                              ? 'text-cyan-300'
+                              : 'text-gray-300'
+                          }`}
+                        >
+                          {theme.label}
+                        </span>
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>
 
               {/* Data Management */}
               <div className="bg-gray-800/30 rounded-xl border border-gray-700 p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-red-500/20 to-rose-500/20 rounded-lg flex items-center justify-center border border-red-500/30">
-                      <HardDrive className="w-6 h-6 text-red-400" />
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-semibold text-gray-300">Data Management</h2>
-                      <p className="text-gray-400 text-sm">Manage application data and storage</p>
-                    </div>
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-10 h-10 bg-gradient-to-br from-red-500/20 to-rose-500/20 rounded-lg flex items-center justify-center border border-red-500/30">
+                    <HardDrive className="w-6 h-6 text-red-400" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-semibold text-gray-300">Data Management</h2>
+                    <p className="text-gray-400 text-sm">Manage application data and storage</p>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Export Data */}
-                  <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-                    <div className="flex items-center space-x-3 mb-4">
-                      <div className="p-2 bg-cyan-500/10 rounded-lg">
-                        <Download className="w-5 h-5 text-cyan-400" />
-                      </div>
-                      <h3 className="text-gray-300 font-medium">Export Data</h3>
-                    </div>
-                    <p className="text-gray-400 text-sm mb-4">Export all census data to CSV format</p>
-                    <button
-                      onClick={exportData}
-                      className="w-full px-4 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-medium rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300"
-                    >
-                      Export All Data
-                    </button>
-                  </div>
-
-                  {/* Import Data */}
-                  <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                {/* Actions */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Export */}
+                  <div className="bg-gray-800/50 rounded-lg p-5 border border-gray-700 flex flex-col justify-between">
                     <div className="flex items-center space-x-3 mb-4">
                       <div className="p-2 bg-green-500/10 rounded-lg">
-                        <Upload className="w-5 h-5 text-green-400" />
+                        <FileText className="w-5 h-5 text-green-400" />
                       </div>
-                      <h3 className="text-gray-300 font-medium">Import Data</h3>
+                      <div>
+                        <h3 className="text-gray-300 font-medium">Export to Excel</h3>
+                        <p className="text-gray-400 text-sm">Download database as .xlsx</p>
+                      </div>
                     </div>
-                    <p className="text-gray-400 text-sm mb-4">Import census data from CSV files</p>
+
                     <button
-                      onClick={importData}
-                      className="w-full px-4 py-2.5 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-medium rounded-lg hover:from-green-500 hover:to-emerald-600 transition-all duration-300"
+                      onClick={exportToExcel}
+                      className="w-full px-4 py-2.5 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-medium rounded-lg hover:from-green-500 hover:to-emerald-600 transition-all flex items-center justify-center space-x-2"
                     >
-                      Import Data
+                      <Download className="w-5 h-5" />
+                      <span>Export</span>
                     </button>
                   </div>
 
                   {/* Clear Cache */}
-                  <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                  <div className="bg-gray-800/50 rounded-lg p-5 border border-gray-700 flex flex-col justify-between">
                     <div className="flex items-center space-x-3 mb-4">
                       <div className="p-2 bg-red-500/10 rounded-lg">
                         <Trash2 className="w-5 h-5 text-red-400" />
                       </div>
-                      <h3 className="text-gray-300 font-medium">Clear Cache</h3>
+                      <div>
+                        <h3 className="text-gray-300 font-medium">Clear Cache</h3>
+                        <p className="text-gray-400 text-sm">Remove temporary data</p>
+                      </div>
                     </div>
-                    <p className="text-gray-400 text-sm mb-4">Clear temporary files and cached data</p>
+
                     <button
                       onClick={clearCache}
-                      className="w-full px-4 py-2.5 bg-gradient-to-r from-red-600 to-rose-700 text-white font-medium rounded-lg hover:from-red-500 hover:to-rose-600 transition-all duration-300"
+                      className="w-full px-4 py-2.5 bg-gradient-to-r from-red-600 to-rose-700 text-white font-medium rounded-lg hover:from-red-500 hover:to-rose-600 transition-all"
                     >
                       Clear Cache
                     </button>
@@ -899,19 +778,17 @@ const Settings = () => {
                 </div>
 
                 {/* Reset Settings */}
-                <div className="mt-6 pt-6 border-t border-gray-700">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-300 mb-2">Reset to Default</h3>
-                      <p className="text-gray-400 text-sm">Reset all settings to their default values</p>
-                    </div>
-                    <button
-                      onClick={resetSettings}
-                      className="px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-800 text-white font-medium rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all duration-300 border border-gray-600"
-                    >
-                      Reset Settings
-                    </button>
+                <div className="mt-6 pt-6 border-t border-gray-700 flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-300">Reset to Default</h3>
+                    <p className="text-gray-400 text-sm">Restore all settings</p>
                   </div>
+                  <button
+                    onClick={resetSettings}
+                    className="px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-800 text-white font-medium rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all border border-gray-600"
+                  >
+                    Reset
+                  </button>
                 </div>
               </div>
 
@@ -933,59 +810,37 @@ const Settings = () => {
                   <div className="space-y-4">
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                       <span className="text-gray-400">Application Version</span>
-                      <span className="text-cyan-400 font-medium">{appInfo.version}</span>
+                      <span className="text-cyan-400 font-medium">{appInfo.app}</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                       <span className="text-gray-400">Electron Version</span>
-                      <span className="text-cyan-400 font-medium">{appInfo.electron}</span>
+                      <span className="text-cyan-400 font-medium">{appInfo.runtime.electron}</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                       <span className="text-gray-400">Node.js Version</span>
-                      <span className="text-cyan-400 font-medium">{appInfo.node}</span>
+                      <span className="text-cyan-400 font-medium">{appInfo.runtime.node}</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                       <span className="text-gray-400">Chrome Version</span>
-                      <span className="text-cyan-400 font-medium">{appInfo.chrome}</span>
+                      <span className="text-cyan-400 font-medium">{appInfo.runtime.chrome}</span>
                     </div>
                   </div>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                       <span className="text-gray-400">Database Type</span>
-                      <span className="text-cyan-400 font-medium">SQLite</span>
+                      <span className="text-cyan-400 font-medium">SQLite3</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                       <span className="text-gray-400">Database Version</span>
-                      <span className="text-cyan-400 font-medium">3.40+</span>
+                      <span className="text-cyan-400 font-medium">{appInfo.libs.betterSqlite3}</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                       <span className="text-gray-400">Platform</span>
-                      <span className="text-cyan-400 font-medium">Windows x64</span>
+                      <span className="text-cyan-400 font-medium">Windows 10/11 ({appInfo.runtime.os_platform}_{appInfo.runtime.os_arch})</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                       <span className="text-gray-400">Build Date</span>
                       <span className="text-cyan-400 font-medium">{new Date().toLocaleDateString()}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* System Status */}
-                <div className="mt-6 p-4 bg-gray-800/50 rounded-lg border border-gray-700">
-                  <h3 className="text-gray-300 font-medium mb-3">System Status</h3>
-                  <div className="space-y-3">
-                    <div>
-                      <div className="flex justify-between text-sm text-gray-400 mb-1">
-                        <span>Storage Usage</span>
-                        <span>{appInfo.storageUsage.percentage}%</span>
-                      </div>
-                      <div className="w-full bg-gray-700 rounded-full h-2">
-                        <div 
-                          className="bg-gradient-to-r from-cyan-500 to-blue-600 h-2 rounded-full"
-                          style={{ width: `${appInfo.storageUsage.percentage}%` }}
-                        ></div>
-                      </div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        {appInfo.storageUsage.used} of {appInfo.storageUsage.total} used
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -1029,7 +884,7 @@ const Settings = () => {
                   <span>•</span>
                   <span>Configuration Management</span>
                   <span>•</span>
-                  <span>Version {appInfo.version}</span>
+                  <span>Version {appInfo.app}</span>
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2">

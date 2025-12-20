@@ -459,7 +459,7 @@ const Dashboard = () => {
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2">
                     <DatabaseIcon className="w-4 h-4" />
-                    <span>SQLite {appInfo.libs.betterSqlite3}</span>
+                    <span>SQLite3 {appInfo.libs.betterSqlite3}</span>
                   </div>
                   <span>•</span>
                   <div className="flex items-center space-x-2">

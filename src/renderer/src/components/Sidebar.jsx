@@ -125,22 +125,6 @@ const Sidebar = ({ stats, pageType = 'dashboard' }) => {
               </span>
               <span className="text-cyan-400 font-medium">{stats.total_households || 0}</span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400 text-xs flex items-center space-x-2">
-                <Users className="w-3 h-3" />
-                <span>Family Members:</span>
-              </span>
-              <span className="text-cyan-400 font-medium">{stats.total_family_members || 0}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400 text-xs flex items-center space-x-2">
-                <User className="w-3 h-3" />
-                <span>Avg Family Size:</span>
-              </span>
-              <span className="text-cyan-400 font-medium">
-                {stats.avg_family_size ? Math.round(stats.avg_family_size * 10) / 10 : 0}
-              </span>
-            </div>
           </div>
         </div>
       )}

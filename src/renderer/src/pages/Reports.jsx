@@ -346,79 +346,10 @@ const Reports = () => {
                       <div className="text-2xl font-bold text-cyan-400">{formatNumber(households.length)}</div>
                       <div className="text-gray-400 text-xs">Total Households</div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-green-400">
-                        {analytics.summary?.totalFamilyMembers ? formatNumber(analytics.summary.totalFamilyMembers) : '0'}
-                      </div>
-                      <div className="text-gray-400 text-xs">Family Members</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-400">
-                        {analytics.summary?.totalRegions || '0'}
-                      </div>
-                      <div className="text-gray-400 text-xs">Regions</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-purple-400">
-                        {analytics.summary?.totalProvinces || '0'}
-                      </div>
-                      <div className="text-gray-400 text-xs">Provinces</div>
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
-
-            {/* Summary Cards */}
-            {analytics.summary && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div className="bg-gray-800/30 rounded-xl p-6 border border-gray-700">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-cyan-500/10 rounded-lg">
-                      <Users className="w-6 h-6 text-cyan-400" />
-                    </div>
-                    <span className="text-cyan-400 text-2xl font-bold">{analytics.summary.avgFamilySize}</span>
-                  </div>
-                  <h3 className="text-gray-300 font-medium mb-1">Avg Family Size</h3>
-                  <p className="text-gray-500 text-sm">Per household average</p>
-                </div>
-
-                <div className="bg-gray-800/30 rounded-xl p-6 border border-gray-700">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-blue-500/10 rounded-lg">
-                      <Globe className="w-6 h-6 text-blue-400" />
-                    </div>
-                    <span className="text-blue-400 text-2xl font-bold">{analytics.summary.avgPerRegion}</span>
-                  </div>
-                  <h3 className="text-gray-300 font-medium mb-1">Households/Region</h3>
-                  <p className="text-gray-500 text-sm">Average distribution</p>
-                </div>
-
-                <div className="bg-gray-800/30 rounded-xl p-6 border border-gray-700">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-green-500/10 rounded-lg">
-                      <Flag className="w-6 h-6 text-green-400" />
-                    </div>
-                    <span className="text-green-400 text-2xl font-bold">{analytics.summary.avgPerProvince}</span>
-                  </div>
-                  <h3 className="text-gray-300 font-medium mb-1">Households/Province</h3>
-                  <p className="text-gray-500 text-sm">Average distribution</p>
-                </div>
-
-                <div className="bg-gray-800/30 rounded-xl p-6 border border-gray-700">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 bg-purple-500/10 rounded-lg">
-                      <Calendar className="w-6 h-6 text-purple-400" />
-                    </div>
-                    {analytics.timeStats && (
-                      <span className="text-purple-400 text-2xl font-bold">{analytics.timeStats.weekly}</span>
-                    )}
-                  </div>
-                  <h3 className="text-gray-300 font-medium mb-1">This Week</h3>
-                  <p className="text-gray-500 text-sm">New households added</p>
-                </div>
-              </div>
-            )}
 
             {/* Analytics Sections */}
             <div className="space-y-8">

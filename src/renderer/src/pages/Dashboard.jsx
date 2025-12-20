@@ -18,7 +18,8 @@ import {
   FileArchive,
   Database as DatabaseIcon,
   Cpu,
-  Globe
+  Globe,
+  Users
 } from 'lucide-react'
 
 const Dashboard = () => {
@@ -148,7 +149,7 @@ const Dashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex">
+      <div className="flex-1 flex overflow-hidden">
         {/* Use Sidebar Component */}
         <Sidebar stats={stats} pageType="dashboard" />
 
@@ -231,12 +232,16 @@ const Dashboard = () => {
                           <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 bg-linear-to-br from-cyan-500/20 to-blue-600/20 rounded-lg flex items-center justify-center border border-cyan-500/30">
                               <span className="text-cyan-300 font-bold">
-                                {household.first_name?.charAt(0) || ''}{household.last_name?.charAt(0) || ''}
+                                {household.first_name?.charAt(0) || ''}
+                                {household.last_name?.charAt(0) || ''}
                               </span>
                             </div>
+
                             <div>
                               <div className="text-gray-300 font-medium">
-                                {household.first_name} {household.middle_name ? `${household.middle_name.charAt(0)}. ` : ''}{household.last_name}
+                                {household.first_name}
+                                {household.middle_name && ` ${household.middle_name}`}
+                                {` ${household.last_name}`}
                                 {household.extension && ` ${household.extension}`}
                               </div>
                             </div>

@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useDatabase } from '../hooks/useDatabase'
+import Sidebar from '../components/Sidebar'
 import {
   // General icons
   Menu,
-  Home,
-  Users,
-  FileText,
-  Settings,
   Search,
   X,
   RefreshCw,
@@ -17,12 +14,9 @@ import {
   Phone,
   Mail,
   MapPin,
-  Calendar,
-  User,
-  AlertCircle,
-  UserPlus,
+  FileText,
   FileArchive,
-  Database,
+  Database as DatabaseIcon,
   Cpu,
   Globe
 } from 'lucide-react'
@@ -155,82 +149,12 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <div className="flex-1 flex">
-        {/* Left Sidebar - Navigation */}
-        <div className="w-64 bg-gray-800/50 border-r border-gray-700 p-6">
-          <div className="mb-8">
-            <div className="w-12 h-12 bg-linear-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center mb-4">
-              <Database className="w-7 h-7 text-white" />
-            </div>
-            <h3 className="text-gray-300 font-semibold mb-2"><span className="text-amber-300">Cen</span>Drive</h3>
-            <p className="text-gray-500 text-sm">Data Managenebt System</p>
-          </div>
-
-          <div className="space-y-2">
-            <Link to="/dashboard" className="block p-3 bg-gray-700/30 rounded-lg border-l-4 border-cyan-500">
-              <div className="flex items-center space-x-3">
-                <Home className="w-5 h-5 text-gray-300" />
-                <span className="text-gray-300 font-medium">Dashboard</span>
-              </div>
-            </Link>
-            <Link to="/data-entry" className="block p-3 hover:bg-gray-700/30 rounded-lg cursor-pointer">
-              <div className="flex items-center space-x-3">
-                <UserPlus className="w-5 h-5 text-cyan-400" />
-                <span className="text-cyan-400">Data Entry</span>
-              </div>
-            </Link>
-            <Link to="/reports" className="block p-3 hover:bg-gray-700/30 rounded-lg cursor-pointer">
-              <div className="flex items-center space-x-3">
-                <FileText className="w-5 h-5 text-gray-400" />
-                <span className="text-gray-400">Reports</span>
-              </div>
-            </Link>
-            <Link to="/settings" className="block p-3 hover:bg-gray-700/30 rounded-lg cursor-pointer">
-              <div className="flex items-center space-x-3">
-                <Settings className="w-5 h-5 text-gray-400" />
-                <span className="text-gray-400">Settings</span>
-              </div>
-            </Link>
-          </div>
-
-          {/* Database Stats in Sidebar */}
-          {stats && (
-            <div className="mt-8 p-4 bg-gray-800/30 rounded-lg border border-gray-700">
-              <h4 className="text-gray-300 font-medium mb-3 text-sm flex items-center space-x-2">
-                <Database className="w-4 h-4" />
-                <span>Database Stats</span>
-              </h4>
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-400 text-xs flex items-center space-x-2">
-                    <Home className="w-3 h-3" />
-                    <span>Households:</span>
-                  </span>
-                  <span className="text-cyan-400 font-medium">{stats.total_households || 0}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-400 text-xs flex items-center space-x-2">
-                    <Users className="w-3 h-3" />
-                    <span>Family Members:</span>
-                  </span>
-                  <span className="text-cyan-400 font-medium">{stats.total_family_members || 0}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-400 text-xs flex items-center space-x-2">
-                    <User className="w-3 h-3" />
-                    <span>Avg Family Size:</span>
-                  </span>
-                  <span className="text-cyan-400 font-medium">
-                    {stats.avg_family_size ? Math.round(stats.avg_family_size * 10) / 10 : 0}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+        {/* Use Sidebar Component */}
+        <Sidebar stats={stats} pageType="dashboard" />
 
         {/* Main Content Area */}
-        <div className="flex-1 p-8 overflow-auto">
-          <div className="max-w-7xl mx-auto">
+        <div className="flex-1 p-4 overflow-auto">
+          <div className="max-w-8xl mx-auto">
             {/* Header with Search */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-6">
@@ -529,7 +453,7 @@ const Dashboard = () => {
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2">
-                    <Database className="w-4 h-4" />
+                    <DatabaseIcon className="w-4 h-4" />
                     <span>SQLite {appInfo.libs.betterSqlite3}</span>
                   </div>
                   <span>•</span>

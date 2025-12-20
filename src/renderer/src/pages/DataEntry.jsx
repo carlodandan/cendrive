@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDatabase } from '../hooks/useDatabase'
 import { useRegionData } from '../hooks/useRegionData'
+import Sidebar from '../components/Sidebar'
 import {
   // Navigation icons
   Menu,
@@ -260,72 +261,11 @@ const DataEntry = () => {
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar - Navigation */}
-        <div className="w-64 bg-gray-800/50 border-r border-gray-700 p-6">
-          <div className="mb-8">
-            <div className="w-12 h-12 bg-linear-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center mb-4">
-              <Edit2 className="w-7 h-7 text-white" />
-            </div>
-            <h3 className="text-gray-300 font-semibold mb-2">Data Entry</h3>
-            <p className="text-gray-500 text-sm">Add New Census Record</p>
-          </div>
-
-          <div className="space-y-2 mb-8">
-            <Link to="/dashboard" className="block p-3 hover:bg-gray-700/30 rounded-lg">
-              <div className="flex items-center space-x-3">
-                <Home className="w-5 h-5 text-gray-400" />
-                <span className="text-gray-400">Dashboard</span>
-              </div>
-            </Link>
-            <Link to="/data-entry" className="block p-3 bg-gray-700/50 rounded-lg border-l-4 border-cyan-500">
-              <div className="flex items-center space-x-3">
-                <UserPlus className="w-5 h-5 text-gray-300" />
-                <span className="text-gray-300 font-medium">Data Entry</span>
-              </div>
-            </Link>
-            <Link to="/reports" className="block p-3 hover:bg-gray-700/30 rounded-lg">
-              <div className="flex items-center space-x-3">
-                <FileText className="w-5 h-5 text-gray-400" />
-                <span className="text-gray-400">Reports</span>
-              </div>
-            </Link>
-            <Link to="/settings" className="block p-3 hover:bg-gray-700/30 rounded-lg">
-              <div className="flex items-center space-x-3">
-                <Settings className="w-5 h-5 text-gray-400" />
-                <span className="text-gray-400">Settings</span>
-              </div>
-            </Link>
-          </div>
-
-          <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
-            <h4 className="text-gray-300 font-medium mb-2">Quick Stats</h4>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-gray-400 text-sm flex items-center space-x-2">
-                  <Users className="w-4 h-4" />
-                  <span>Family Members</span>
-                </span>
-                <span className="text-cyan-400 font-medium">{familyMembers.length}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-400 text-sm flex items-center space-x-2">
-                  <Clock className="w-4 h-4" />
-                  <span>Form Progress</span>
-                </span>
-                <span className="text-green-400 font-medium">
-                  {(() => {
-                    const fields = Object.values(formData).filter(val => val !== '').length
-                    const total = Object.keys(formData).length
-                    return `${Math.round((fields / total) * 100)}%`
-                  })()}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Sidebar pageType="data-entry" familyMembers={familyMembers} formData={formData} />
 
         {/* Main Form Area */}
-        <div className="flex-1 p-8 overflow-auto">
-          <div className="max-w-6xl mx-auto">
+        <div className="flex-1 p-4 overflow-auto">
+          <div className="max-w-8xl mx-auto">
             {/* Header */}
             <div className="mb-8">
               <h1 className="text-4xl font-bold bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">

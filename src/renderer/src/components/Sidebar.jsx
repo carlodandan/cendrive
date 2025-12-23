@@ -30,7 +30,7 @@ const Sidebar = ({ stats, pageType = 'dashboard' }) => {
       icon: <UserPlus className="w-5 h-5" />,
       label: 'Data Entry',
       active: currentPath === '/data-entry',
-      colorClass: currentPath === '/data-entry' ? 'text-cyan-400' : 'text-[rgb(var(--text-muted))]'
+      colorClass: currentPath === '/data-entry' ? 'text-[rgb(var(--text2))]' : 'text-[rgb(var(--text-muted))]'
     },
     {
       path: '/reports',
@@ -123,7 +123,7 @@ const Sidebar = ({ stats, pageType = 'dashboard' }) => {
                 <Home className="w-3 h-3" />
                 <span>Households:</span>
               </span>
-              <span className="text-cyan-400 font-medium">{stats.total_households || 0}</span>
+              <span className="text-[rgb(var(--text2))] font-medium">{stats.total_households || 0}</span>
             </div>
           </div>
         </div>

@@ -324,7 +324,7 @@ const Settings = () => {
 
         {/* Settings Content */}
         <div className="flex-1 p-8 overflow-auto">
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-8xl mx-auto">
             {/* Header */}
             <div className="mb-8">
               <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
@@ -720,7 +720,7 @@ const Settings = () => {
                         <div
                           className={`mb-2 ${
                             themeSettings.theme === theme.value
-                              ? 'text-cyan-400'
+                              ? 'text-[rgb(var(--text2))]'
                               : 'text-[rgb(var(--text-muted))]'
                           }`}
                         >
@@ -830,37 +830,37 @@ const Settings = () => {
                   <div className="space-y-4">
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                       <span className="text-[rgb(var(--text-muted))]">Application Version</span>
-                      <span className="text-cyan-400 font-medium">{appInfo.app}</span>
+                      <span className="text-[rgb(var(--text2))] font-medium">{appInfo.app}</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                       <span className="text-[rgb(var(--text-muted))]">Electron Version</span>
-                      <span className="text-cyan-400 font-medium">{appInfo.runtime.electron}</span>
+                      <span className="text-[rgb(var(--text2))] font-medium">{appInfo.runtime.electron}</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                       <span className="text-[rgb(var(--text-muted))]">Node.js Version</span>
-                      <span className="text-cyan-400 font-medium">{appInfo.runtime.node}</span>
+                      <span className="text-[rgb(var(--text2))] font-medium">{appInfo.runtime.node}</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                       <span className="text-[rgb(var(--text-muted))]">Chrome Version</span>
-                      <span className="text-cyan-400 font-medium">{appInfo.runtime.chrome}</span>
+                      <span className="text-[rgb(var(--text2))] font-medium">{appInfo.runtime.chrome}</span>
                     </div>
                   </div>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                       <span className="text-[rgb(var(--text-muted))]">Database Type</span>
-                      <span className="text-cyan-400 font-medium">SQLite3</span>
+                      <span className="text-[rgb(var(--text2))] font-medium">SQLite3</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                       <span className="text-[rgb(var(--text-muted))]">Database Version</span>
-                      <span className="text-cyan-400 font-medium">{appInfo.libs.betterSqlite3}</span>
+                      <span className="text-[rgb(var(--text2))] font-medium">{appInfo.libs.betterSqlite3}</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                       <span className="text-[rgb(var(--text-muted))]">Platform</span>
-                      <span className="text-cyan-400 font-medium">Windows 10/11 ({appInfo.runtime.os_platform}_{appInfo.runtime.os_arch})</span>
+                      <span className="text-[rgb(var(--text2))] font-medium">Windows 10/11 ({appInfo.runtime.os_platform}_{appInfo.runtime.os_arch})</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
                       <span className="text-[rgb(var(--text-muted))]">Build Date</span>
-                      <span className="text-cyan-400 font-medium">{new Date().toLocaleDateString()}</span>
+                      <span className="text-[rgb(var(--text2))] font-medium">{new Date().toLocaleDateString()}</span>
                     </div>
                   </div>
                 </div>

@@ -297,7 +297,7 @@ const Dashboard = () => {
                             {household.family_count > 0 && (
                               <button
                                 onClick={() => toggleHouseholdDetails(household.id)}
-                                className="text-cyan-400 hover:text-cyan-300 text-sm font-medium flex items-center space-x-1"
+                                className="text-[rgb(var(--text2))] hover:text-cyan-300 text-sm font-medium flex items-center space-x-1"
                               >
                                 <span>{expandedHouseholdId === household.id ? 'Hide' : 'Show'}</span>
                                 {expandedHouseholdId === household.id ? (
@@ -336,7 +336,7 @@ const Dashboard = () => {
                               <Users className="w-5 h-5" />
                               <span>Family Members</span>
                             </h4>
-                            <span className="text-cyan-400 text-sm">
+                            <span className="text-[rgb(var(--text2))] text-sm">
                               Total: {expandedHouseholdDetails[household.id]?.familyMembers?.length || household.family_count || 0}
                             </span>
                           </div>

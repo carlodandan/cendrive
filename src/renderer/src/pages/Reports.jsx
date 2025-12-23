@@ -338,12 +338,12 @@ const Reports = () => {
               <div className="bg-[rgb(var(--bg))] rounded-lg p-4 border border-gray-700">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <Database className="w-5 h-5 text-cyan-400" />
+                    <Database className="w-5 h-5 text-[rgb(var(--text2))]" />
                     <span className="text-[rgb(var(--text))] font-medium">Database Status</span>
                   </div>
                   <div className="flex items-center space-x-6">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-cyan-400">{formatNumber(households.length)}</div>
+                      <div className="text-2xl font-bold text-[rgb(var(--text2))]">{formatNumber(households.length)}</div>
                       <div className="text-[rgb(var(--text-muted))] text-xs">Total Households</div>
                     </div>
                   </div>
@@ -361,7 +361,7 @@ const Reports = () => {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <Globe className="w-5 h-5 text-cyan-400" />
+                      <Globe className="w-5 h-5 text-[rgb(var(--text2))]" />
                       <h2 className="text-xl font-bold text-[rgb(var(--text))]">Regional Analysis</h2>
                       <span className="px-3 py-1 bg-cyan-500/10 text-cyan-300 text-xs font-medium rounded-full">
                         {analytics.byRegion.length} regions
@@ -579,7 +579,7 @@ const Reports = () => {
                                       </span>
                                     </div>
                                   </td>
-                                  <td className="py-3 text-center text-cyan-400 font-medium">
+                                  <td className="py-3 text-center text-[rgb(var(--text2))] font-medium">
                                     {town.percentage}%
                                   </td>
                                   <td className="py-3 text-center">
@@ -642,7 +642,7 @@ const Reports = () => {
                 
                 <div className="flex items-center space-x-4">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-cyan-400">
+                    <div className="text-2xl font-bold text-[rgb(var(--text2))]">
                       {households.length}
                     </div>
                     <div className="text-[rgb(var(--text-muted))] text-xs">Total Records</div>

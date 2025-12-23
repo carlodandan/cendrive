@@ -275,7 +275,7 @@ const DataEntry = () => {
                 Enter household information for census records. All data is stored locally on your device.
               </p>
               {dbLoading && (
-                <div className="mt-2 flex items-center text-sm text-cyan-400">
+                <div className="mt-2 flex items-center text-sm text-[rgb(var(--text2))]">
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
                   Saving record...
                 </div>
@@ -287,7 +287,7 @@ const DataEntry = () => {
                 </div>
               )}
               {regionLoading && (
-                <div className="mt-2 flex items-center text-sm text-cyan-400">
+                <div className="mt-2 flex items-center text-sm text-[rgb(var(--text2))]">
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
                   Loading region data...
                 </div>
@@ -307,7 +307,7 @@ const DataEntry = () => {
                   <h2 className="text-2xl font-semibold text-[rgb(var(--text))]">
                     <div className="flex items-center">
                       <div className="w-8 h-8 bg-cyan-500/20 rounded-lg flex items-center justify-center mr-3">
-                        <User className="w-5 h-5 text-cyan-400" />
+                        <User className="w-5 h-5 text-[rgb(var(--text2))]" />
                       </div>
                       Personal Information
                     </div>
@@ -690,7 +690,7 @@ const DataEntry = () => {
                       <div key={member.id} className="flex items-center justify-between p-4 bg-[rgb(var(--bg))] rounded-lg border border-gray-700">
                         <div className="flex items-center">
                           <div className="w-10 h-10 rounded-full bg-linear-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center mr-4">
-                            <User className="w-5 h-5 text-cyan-400" />
+                            <User className="w-5 h-5 text-[rgb(var(--text2))]" />
                           </div>
                           <div>
                             <div className="text-[rgb(var(--text))] font-medium">

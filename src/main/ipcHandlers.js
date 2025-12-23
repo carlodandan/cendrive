@@ -1,5 +1,5 @@
 import databaseService from '../services/database/DatabaseService';
-import { app } from 'electron';
+import { app, nativeTheme } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import * as XLSX from 'xlsx';
@@ -170,6 +170,15 @@ function setupIpcHandlers(ipcMain) {
       },
     };
   });
+
+  ipcMain.handle('theme:set', (_event, theme) => {
+    nativeTheme.themeSource = theme // 'dark' | 'light' | 'system'
+    return nativeTheme.shouldUseDarkColors
+  })
+
+  ipcMain.handle('theme:get', () => {
+    return nativeTheme.themeSource
+  })
 }
 
 export default setupIpcHandlers

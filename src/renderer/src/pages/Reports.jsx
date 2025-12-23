@@ -238,21 +238,21 @@ const Reports = () => {
   }
 
   return (
-    <div className="h-screen w-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col overflow-hidden">
+    <div className="h-screen w-screen bg-gradient-to-br from-[rgb(var(--bg))] via-[rgb(var(--card))] to-[rgb(var(--bg))] flex flex-col overflow-hidden">
       {/* Windows-style Title Bar */}
-      <div className="h-10 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-4">
+      <div className="h-10 bg-[rgb(var(--bg))] border-b border-gray-700 flex items-center justify-between px-4">
         <div className="flex items-center space-x-3">
           <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
             <div className="w-6 h-6 bg-gradient-to-br from-cyan-500 to-blue-600 rounded flex items-center justify-center">
-              <BarChart3 className="w-4 h-4 text-white" />
+              <BarChart3 className="w-4 h-4 text-[rgb(var(--blight))]" />
             </div>
-            <span className="text-gray-300 font-medium text-sm"><span className="text-amber-300">Cen</span>Drive Reports</span>
+            <span className="text-[rgb(var(--text))] font-medium text-sm"><span className="text-amber-300">Cen</span>Drive Reports</span>
           </Link>
         </div>
         <div className="flex items-center space-x-4">
           <Link 
             to="/dashboard"
-            className="text-gray-400 hover:text-gray-300 text-sm flex items-center space-x-2"
+            className="text-[rgb(var(--text-muted))] hover:text-[rgb(var(--text))] text-sm flex items-center space-x-2"
           >
             <Home className="w-4 h-4" />
             <span>Dashboard</span>
@@ -275,19 +275,19 @@ const Reports = () => {
                   <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
                     Census Analytics & Reports
                   </h1>
-                  <p className="text-gray-400">
+                  <p className="text-[rgb(var(--text-muted))]">
                     Real-time geographical analysis from database • Last updated: {new Date().toLocaleTimeString()}
                   </p>
                 </div>
                 
                 <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-2 bg-gray-800/50 rounded-lg p-1 border border-gray-700">
+                  <div className="flex items-center space-x-2 bg-[rgb(var(--bg))] rounded-lg p-1 border border-gray-700">
                     <button
                       onClick={() => setTimeFilter('all')}
                       className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                         timeFilter === 'all' 
-                          ? 'bg-cyan-600 text-white' 
-                          : 'text-gray-400 hover:text-gray-300'
+                          ? 'bg-cyan-600 text-[rgb(var(--blight))]' 
+                          : 'text-[rgb(var(--text-muted))] hover:text-[rgb(var(--text))]'
                       }`}
                     >
                       All Time
@@ -296,8 +296,8 @@ const Reports = () => {
                       onClick={() => setTimeFilter('month')}
                       className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                         timeFilter === 'month' 
-                          ? 'bg-cyan-600 text-white' 
-                          : 'text-gray-400 hover:text-gray-300'
+                          ? 'bg-cyan-600 text-[rgb(var(--blight))]' 
+                          : 'text-[rgb(var(--text-muted))] hover:text-[rgb(var(--text))]'
                       }`}
                     >
                       Last Month
@@ -306,8 +306,8 @@ const Reports = () => {
                       onClick={() => setTimeFilter('week')}
                       className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                         timeFilter === 'week' 
-                          ? 'bg-cyan-600 text-white' 
-                          : 'text-gray-400 hover:text-gray-300'
+                          ? 'bg-cyan-600 text-[rgb(var(--blight))]' 
+                          : 'text-[rgb(var(--text-muted))] hover:text-[rgb(var(--text))]'
                       }`}
                     >
                       Last Week
@@ -317,7 +317,7 @@ const Reports = () => {
                   <button
                     onClick={exportToCSV}
                     disabled={loading || households.length === 0}
-                    className="px-5 py-2.5 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-medium rounded-lg hover:from-green-500 hover:to-emerald-600 transition-all duration-300 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-5 py-2.5 bg-gradient-to-r from-green-600 to-emerald-700 text-[rgb(var(--blight))] font-medium rounded-lg hover:from-green-500 hover:to-emerald-600 transition-all duration-300 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Download className="w-4 h-4" />
                     <span>Export CSV</span>
@@ -326,7 +326,7 @@ const Reports = () => {
                   <button
                     onClick={loadData}
                     disabled={loading}
-                    className="px-5 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium rounded-lg transition-colors duration-300 flex items-center space-x-2 disabled:opacity-50"
+                    className="px-5 py-2.5 bg-[rgb(var(--muted))] hover:bg-gray-600 text-[rgb(var(--text))] font-medium rounded-lg transition-colors duration-300 flex items-center space-x-2 disabled:opacity-50"
                   >
                     <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                     <span>{loading ? 'Refreshing...' : 'Refresh'}</span>
@@ -335,16 +335,16 @@ const Reports = () => {
               </div>
 
               {/* Database Status */}
-              <div className="bg-gray-800/30 rounded-lg p-4 border border-gray-700">
+              <div className="bg-[rgb(var(--bg))] rounded-lg p-4 border border-gray-700">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <Database className="w-5 h-5 text-cyan-400" />
-                    <span className="text-gray-300 font-medium">Database Status</span>
+                    <span className="text-[rgb(var(--text))] font-medium">Database Status</span>
                   </div>
                   <div className="flex items-center space-x-6">
                     <div className="text-center">
                       <div className="text-2xl font-bold text-cyan-400">{formatNumber(households.length)}</div>
-                      <div className="text-gray-400 text-xs">Total Households</div>
+                      <div className="text-[rgb(var(--text-muted))] text-xs">Total Households</div>
                     </div>
                   </div>
                 </div>
@@ -354,24 +354,24 @@ const Reports = () => {
             {/* Analytics Sections */}
             <div className="space-y-8">
               {/* Regional Analysis */}
-              <div className="bg-gray-800/30 rounded-xl border border-gray-700 overflow-hidden">
+              <div className="bg-[rgb(var(--bg))] rounded-xl border border-gray-700 overflow-hidden">
                 <div 
-                  className="p-6 bg-gray-800/50 border-b border-gray-700 cursor-pointer hover:bg-gray-800/70 transition-colors"
+                  className="p-6 bg-[rgb(var(--bg))] border-b border-gray-700 cursor-pointer hover:bg-[rgb(var(--bg))] transition-colors"
                   onClick={() => toggleSection('region')}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <Globe className="w-5 h-5 text-cyan-400" />
-                      <h2 className="text-xl font-bold text-gray-300">Regional Analysis</h2>
+                      <h2 className="text-xl font-bold text-[rgb(var(--text))]">Regional Analysis</h2>
                       <span className="px-3 py-1 bg-cyan-500/10 text-cyan-300 text-xs font-medium rounded-full">
                         {analytics.byRegion.length} regions
                       </span>
                     </div>
-                    <button className="text-gray-400 hover:text-gray-300">
+                    <button className="text-[rgb(var(--text-muted))] hover:text-[rgb(var(--text))]">
                       {expandedSections.region ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                     </button>
                   </div>
-                  <p className="text-gray-400 text-sm mt-2">
+                  <p className="text-[rgb(var(--text-muted))] text-sm mt-2">
                     Distribution of households across different regions • Based on {households.length} records
                   </p>
                 </div>
@@ -385,14 +385,14 @@ const Reports = () => {
                           const totalFamilyMembers = regionHouseholds.reduce((sum, h) => sum + (h.family_count || 0), 0)
                           
                           return (
-                            <div key={region.name} className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                            <div key={region.name} className="bg-[rgb(var(--bg))] rounded-lg p-4 border border-gray-700">
                               <div className="flex items-center justify-between mb-3">
                                 <div className="flex items-center space-x-3">
                                   <div className="w-10 h-10 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-lg flex items-center justify-center border border-blue-500/30">
                                     <span className="text-blue-300 font-bold text-lg">{index + 1}</span>
                                   </div>
                                   <div>
-                                    <h3 className="text-gray-300 font-medium">{region.name}</h3>
+                                    <h3 className="text-[rgb(var(--text))] font-medium">{region.name}</h3>
                                     <div className="flex items-center space-x-4 text-sm text-gray-500">
                                       <span className="flex items-center space-x-1">
                                         <Building2 className="w-4 h-4" />
@@ -410,16 +410,16 @@ const Reports = () => {
                                 </div>
                                 <div className="text-right">
                                   <div className="mb-2">
-                                    <div className={`px-3 py-1.5 bg-gradient-to-r ${getColorForPercentage(parseFloat(region.percentage))} text-white text-sm font-medium rounded-full`}>
+                                    <div className={`px-3 py-1.5 bg-gradient-to-r ${getColorForPercentage(parseFloat(region.percentage))} text-[rgb(var(--blight))] text-sm font-medium rounded-full`}>
                                       {region.percentage}% • Rank #{index + 1}
                                     </div>
                                   </div>
-                                  <div className="text-gray-400 text-sm">
+                                  <div className="text-[rgb(var(--text-muted))] text-sm">
                                     Avg: {(totalFamilyMembers / region.count).toFixed(1)} members/household
                                   </div>
                                 </div>
                               </div>
-                              <div className="w-full bg-gray-700 rounded-full h-2">
+                              <div className="w-full bg-[rgb(var(--muted))] rounded-full h-2">
                                 <div 
                                   className={`h-2 rounded-full bg-gradient-to-r ${getColorForPercentage(parseFloat(region.percentage))}`}
                                   style={{ width: `${Math.min(parseFloat(region.percentage) * 2, 100)}%` }}
@@ -433,7 +433,7 @@ const Reports = () => {
                       <div className="text-center py-8">
                         <Globe className="w-12 h-12 text-gray-600 mx-auto mb-3" />
                         <p className="text-gray-500">No regional data available</p>
-                        <p className="text-gray-400 text-sm mt-1">Add households with region information to see analytics</p>
+                        <p className="text-[rgb(var(--text-muted))] text-sm mt-1">Add households with region information to see analytics</p>
                       </div>
                     )}
                   </div>
@@ -441,24 +441,24 @@ const Reports = () => {
               </div>
 
               {/* Provincial Analysis */}
-              <div className="bg-gray-800/30 rounded-xl border border-gray-700 overflow-hidden">
+              <div className="bg-[rgb(var(--bg))] rounded-xl border border-gray-700 overflow-hidden">
                 <div 
-                  className="p-6 bg-gray-800/50 border-b border-gray-700 cursor-pointer hover:bg-gray-800/70 transition-colors"
+                  className="p-6 bg-[rgb(var(--bg))] border-b border-gray-700 cursor-pointer hover:bg-[rgb(var(--bg))] transition-colors"
                   onClick={() => toggleSection('province')}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <Flag className="w-5 h-5 text-green-400" />
-                      <h2 className="text-xl font-bold text-gray-300">Provincial Analysis</h2>
+                      <h2 className="text-xl font-bold text-[rgb(var(--text))]">Provincial Analysis</h2>
                       <span className="px-3 py-1 bg-green-500/10 text-green-300 text-xs font-medium rounded-full">
                         {analytics.byProvince.length} provinces
                       </span>
                     </div>
-                    <button className="text-gray-400 hover:text-gray-300">
+                    <button className="text-[rgb(var(--text-muted))] hover:text-[rgb(var(--text))]">
                       {expandedSections.province ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                     </button>
                   </div>
-                  <p className="text-gray-400 text-sm mt-2">
+                  <p className="text-[rgb(var(--text-muted))] text-sm mt-2">
                     Household distribution by province • Showing {timeFilter === 'all' ? 'all time' : timeFilter === 'month' ? 'last month' : 'last week'} data
                   </p>
                 </div>
@@ -472,11 +472,11 @@ const Reports = () => {
                           const totalFamilyMembers = provinceHouseholds.reduce((sum, h) => sum + (h.family_count || 0), 0)
                           
                           return (
-                            <div key={province.name} className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                            <div key={province.name} className="bg-[rgb(var(--bg))] rounded-lg p-4 border border-gray-700">
                               <div className="flex items-center justify-between mb-3">
                                 <div>
                                   <div className="flex items-center space-x-2 mb-1">
-                                    <h3 className="text-gray-300 font-medium">{province.name}</h3>
+                                    <h3 className="text-[rgb(var(--text))] font-medium">{province.name}</h3>
                                     <span className="text-xs px-2 py-1 bg-blue-500/20 text-blue-300 rounded-full">
                                       {province.region}
                                     </span>
@@ -494,11 +494,11 @@ const Reports = () => {
                                     </div>
                                   </div>
                                 </div>
-                                <div className={`px-3 py-1 bg-gradient-to-r ${getColorForPercentage(parseFloat(province.percentage))} text-white text-xs font-medium rounded-full`}>
+                                <div className={`px-3 py-1 bg-gradient-to-r ${getColorForPercentage(parseFloat(province.percentage))} text-[rgb(var(--blight))] text-xs font-medium rounded-full`}>
                                   #{index + 1}
                                 </div>
                               </div>
-                              <div className="w-full bg-gray-700 rounded-full h-1.5">
+                              <div className="w-full bg-[rgb(var(--muted))] rounded-full h-1.5">
                                 <div 
                                   className={`h-1.5 rounded-full bg-gradient-to-r ${getColorForPercentage(parseFloat(province.percentage))}`}
                                   style={{ width: `${Math.min(parseFloat(province.percentage) * 3, 100)}%` }}
@@ -512,7 +512,7 @@ const Reports = () => {
                       <div className="text-center py-8">
                         <Flag className="w-12 h-12 text-gray-600 mx-auto mb-3" />
                         <p className="text-gray-500">No provincial data available</p>
-                        <p className="text-gray-400 text-sm mt-1">Add households with province information to see analytics</p>
+                        <p className="text-[rgb(var(--text-muted))] text-sm mt-1">Add households with province information to see analytics</p>
                       </div>
                     )}
                   </div>
@@ -520,24 +520,24 @@ const Reports = () => {
               </div>
 
               {/* Town/City Analysis */}
-              <div className="bg-gray-800/30 rounded-xl border border-gray-700 overflow-hidden">
+              <div className="bg-[rgb(var(--bg))] rounded-xl border border-gray-700 overflow-hidden">
                 <div 
-                  className="p-6 bg-gray-800/50 border-b border-gray-700 cursor-pointer hover:bg-gray-800/70 transition-colors"
+                  className="p-6 bg-[rgb(var(--bg))] border-b border-gray-700 cursor-pointer hover:bg-[rgb(var(--bg))] transition-colors"
                   onClick={() => toggleSection('town')}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <Building className="w-5 h-5 text-purple-400" />
-                      <h2 className="text-xl font-bold text-gray-300">Town/City Analysis</h2>
+                      <h2 className="text-xl font-bold text-[rgb(var(--text))]">Town/City Analysis</h2>
                       <span className="px-3 py-1 bg-purple-500/10 text-purple-300 text-xs font-medium rounded-full">
                         {analytics.byTown.length} towns/cities
                       </span>
                     </div>
-                    <button className="text-gray-400 hover:text-gray-300">
+                    <button className="text-[rgb(var(--text-muted))] hover:text-[rgb(var(--text))]">
                       {expandedSections.town ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                     </button>
                   </div>
-                  <p className="text-gray-400 text-sm mt-2">
+                  <p className="text-[rgb(var(--text-muted))] text-sm mt-2">
                     Detailed breakdown by town or city • Top 20 shown
                   </p>
                 </div>
@@ -548,7 +548,7 @@ const Reports = () => {
                       <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                           <thead>
-                            <tr className="text-gray-400 border-b border-gray-700">
+                            <tr className="text-[rgb(var(--text-muted))] border-b border-gray-700">
                               <th className="pb-3 font-medium text-left">Town/City</th>
                               <th className="pb-3 font-medium text-left">Province</th>
                               <th className="pb-3 font-medium text-center">Households</th>
@@ -566,12 +566,12 @@ const Reports = () => {
                               const totalFamilyMembers = townHouseholds.reduce((sum, h) => sum + (h.family_count || 0), 0)
                               
                               return (
-                                <tr key={`${town.name}-${index}`} className="hover:bg-gray-800/30">
-                                  <td className="py-3 text-gray-300">{town.name.split(',')[0].trim()}</td>
-                                  <td className="py-3 text-gray-400">{town.province}</td>
+                                <tr key={`${town.name}-${index}`} className="hover:bg-[rgb(var(--bg))]">
+                                  <td className="py-3 text-[rgb(var(--text))]">{town.name.split(',')[0].trim()}</td>
+                                  <td className="py-3 text-[rgb(var(--text-muted))]">{town.province}</td>
                                   <td className="py-3 text-center">
                                     <div className="flex flex-col items-center">
-                                      <span className="px-3 py-1 bg-gray-700/50 text-gray-300 rounded-full text-xs mb-1">
+                                      <span className="px-3 py-1 bg-[rgb(var(--muted))]/50 text-[rgb(var(--text))] rounded-full text-xs mb-1">
                                         {town.count} households
                                       </span>
                                       <span className="text-xs text-gray-500">
@@ -586,7 +586,7 @@ const Reports = () => {
                                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                                       index < 3 
                                         ? 'bg-gradient-to-r from-yellow-500/20 to-yellow-500/40 text-yellow-300' 
-                                        : 'bg-gray-700/50 text-gray-400'
+                                        : 'bg-[rgb(var(--muted))]/50 text-[rgb(var(--text-muted))]'
                                     }`}>
                                       #{index + 1}
                                     </span>
@@ -596,7 +596,7 @@ const Reports = () => {
                                       <div className="text-xs text-gray-500 w-16 text-right">
                                         {town.percentage}%
                                       </div>
-                                      <div className="w-32 bg-gray-700 rounded-full h-2">
+                                      <div className="w-32 bg-[rgb(var(--muted))] rounded-full h-2">
                                         <div 
                                           className={`h-2 rounded-full bg-gradient-to-r ${getColorForPercentage(parseFloat(town.percentage))}`}
                                           style={{ width: `${Math.min(parseFloat(town.percentage) * 5, 100)}%` }}
@@ -610,7 +610,7 @@ const Reports = () => {
                           </tbody>
                         </table>
                         {analytics.byTown.length > 20 && (
-                          <div className="text-center mt-4 text-gray-400 text-sm">
+                          <div className="text-center mt-4 text-[rgb(var(--text-muted))] text-sm">
                             Showing top 20 of {analytics.byTown.length} towns/cities
                           </div>
                         )}
@@ -619,7 +619,7 @@ const Reports = () => {
                       <div className="text-center py-8">
                         <Building className="w-12 h-12 text-gray-600 mx-auto mb-3" />
                         <p className="text-gray-500">No town/city data available</p>
-                        <p className="text-gray-400 text-sm mt-1">Add households with town information to see analytics</p>
+                        <p className="text-[rgb(var(--text-muted))] text-sm mt-1">Add households with town information to see analytics</p>
                       </div>
                     )}
                   </div>
@@ -628,11 +628,11 @@ const Reports = () => {
             </div>
 
             {/* Data Summary */}
-            <div className="mt-8 p-6 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl border border-gray-700">
+            <div className="mt-8 p-6 bg-gradient-to-r from-[rgb(var(--card))] to-[rgb(var(--bg))] rounded-xl border border-gray-700">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-xl font-bold text-gray-300 mb-2">Data Summary</h3>
-                  <p className="text-gray-400 text-sm">
+                  <h3 className="text-xl font-bold text-[rgb(var(--text))] mb-2">Data Summary</h3>
+                  <p className="text-[rgb(var(--text-muted))] text-sm">
                     {analytics.summary ? 
                       `Analyzed ${analytics.summary.totalHouseholds} households with ${analytics.summary.totalFamilyMembers} family members across ${analytics.summary.totalRegions} regions.` 
                       : 'Loading data summary...'
@@ -645,19 +645,19 @@ const Reports = () => {
                     <div className="text-2xl font-bold text-cyan-400">
                       {households.length}
                     </div>
-                    <div className="text-gray-400 text-xs">Total Records</div>
+                    <div className="text-[rgb(var(--text-muted))] text-xs">Total Records</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-green-400">
                       {analytics.summary?.totalFamilyMembers || '0'}
                     </div>
-                    <div className="text-gray-400 text-xs">Total Members</div>
+                    <div className="text-[rgb(var(--text-muted))] text-xs">Total Members</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-blue-400">
                       {analytics.summary?.totalRegions || '0'}
                     </div>
-                    <div className="text-gray-400 text-xs">Regions</div>
+                    <div className="text-[rgb(var(--text-muted))] text-xs">Regions</div>
                   </div>
                 </div>
               </div>
@@ -691,21 +691,21 @@ const Reports = () => {
       </div>
 
       {/* Status Bar */}
-      <div className="h-8 bg-gray-800 border-t border-gray-700 flex items-center justify-between px-4">
+      <div className="h-8 bg-[rgb(var(--bg))] border-t border-gray-700 flex items-center justify-between px-4">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <div className={`w-3 h-3 rounded-full ${loading ? 'bg-yellow-500' : 'bg-green-500'}`}></div>
-            <span className="text-gray-400 text-sm">
+            <span className="text-[rgb(var(--text-muted))] text-sm">
               {loading ? 'Loading data...' : `Reports: Ready • ${households.length} households analyzed`}
             </span>
           </div>
           <span className="text-gray-600">|</span>
-          <span className="text-gray-400 text-sm">
+          <span className="text-[rgb(var(--text-muted))] text-sm">
             Filter: {timeFilter === 'all' ? 'All Time' : timeFilter === 'month' ? 'Last Month' : 'Last Week'}
           </span>
         </div>
         <div className="flex items-center space-x-4">
-          <span className="text-gray-400 text-sm">
+          <span className="text-[rgb(var(--text-muted))] text-sm">
             {analytics.byRegion.length} regions • {analytics.byProvince.length} provinces • {analytics.byTown.length} towns
           </span>
         </div>

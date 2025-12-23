@@ -44,3 +44,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Expose App
   getAppInfo: () => ipcRenderer.invoke('get-app-info')
 })
+
+contextBridge.exposeInMainWorld('themeAPI', {
+  setTheme: (theme) => ipcRenderer.invoke('theme:set', theme),
+  getTheme: () => ipcRenderer.invoke('theme:get')
+})

@@ -239,19 +239,19 @@ const DataEntry = () => {
   }
 
   return (
-    <div className="h-screen w-screen bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col overflow-hidden select-none">
+    <div className="h-screen w-screen bg-linear-to-br from-[rgb(var(--bg))] via-[rgb(var(--card))] to-[rgb(var(--bg))] flex flex-col overflow-hidden select-none">
       {/* Windows-style Title Bar */}
-      <div className="h-10 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-4">
+      <div className="h-10 bg-[rgb(var(--bg))] border-b border-gray-700 flex items-center justify-between px-4">
         <div className="flex items-center space-x-3">
           <Link to="/dashboard" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
             <div className="w-6 h-6 bg-linear-to-br from-cyan-500 to-blue-600 rounded flex items-center justify-center">
-              <Menu className="w-4 h-4 text-white" />
+              <Menu className="w-4 h-4 text-[rgb(var(--blight))]" />
             </div>
-            <span className="text-gray-300 font-medium text-sm">Cendrive • Data Entry</span>
+            <span className="text-[rgb(var(--text))] font-medium text-sm">Cendrive • Data Entry</span>
           </Link>
         </div>
         <div className="flex items-center space-x-2">
-          <Link to="/dashboard" className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm text-gray-300 flex items-center space-x-2">
+          <Link to="/dashboard" className="px-3 py-1 bg-[rgb(var(--muted))] hover:bg-gray-600 rounded text-sm text-[rgb(var(--text))] flex items-center space-x-2">
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Dashboard</span>
           </Link>
@@ -271,7 +271,7 @@ const DataEntry = () => {
               <h1 className="text-4xl font-bold bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
                 Census Data Entry
               </h1>
-              <p className="text-gray-400">
+              <p className="text-[rgb(var(--text-muted))]">
                 Enter household information for census records. All data is stored locally on your device.
               </p>
               {dbLoading && (
@@ -302,9 +302,9 @@ const DataEntry = () => {
 
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Personal Information Card */}
-              <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-6">
+              <div className="bg-linear-to-br from-[rgb(var(--card))] to-[rgb(var(--bg))] rounded-xl border border-gray-700 p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-semibold text-gray-300">
+                  <h2 className="text-2xl font-semibold text-[rgb(var(--text))]">
                     <div className="flex items-center">
                       <div className="w-8 h-8 bg-cyan-500/20 rounded-lg flex items-center justify-center mr-3">
                         <User className="w-5 h-5 text-cyan-400" />
@@ -312,55 +312,55 @@ const DataEntry = () => {
                       Personal Information
                     </div>
                   </h2>
-                  <span className="text-sm text-gray-500 px-3 py-1 bg-gray-800 rounded-lg">Required</span>
+                  <span className="text-sm text-gray-500 px-3 py-1 bg-[rgb(var(--bg))] rounded-lg">Required</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-gray-300 mb-2">First Name *</label>
+                    <label className="block text-[rgb(var(--text))] mb-2">First Name *</label>
                     <input
                       type="text"
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white"
+                      className="w-full px-4 py-3 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))]"
                       placeholder="Enter first name"
                       required
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-gray-300 mb-2">Middle Name</label>
+                    <label className="block text-[rgb(var(--text))] mb-2">Middle Name</label>
                     <input
                       type="text"
                       name="middleName"
                       value={formData.middleName}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white"
+                      className="w-full px-4 py-3 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))]"
                       placeholder="Enter middle name"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-gray-300 mb-2">Last Name *</label>
+                    <label className="block text-[rgb(var(--text))] mb-2">Last Name *</label>
                     <input
                       type="text"
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white"
+                      className="w-full px-4 py-3 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))]"
                       placeholder="Enter last name"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-gray-300 mb-2">Extension</label>
+                    <label className="block text-[rgb(var(--text))] mb-2">Extension</label>
                     <select
                       name="extension"
                       value={formData.extension}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white"
+                      className="w-full px-4 py-3 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))]"
                     >
                       <option value="">None</option>
                       <option value="Jr.">Jr.</option>
@@ -374,9 +374,9 @@ const DataEntry = () => {
               </div>
 
               {/* Address Information Card */}
-              <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-6">
+              <div className="bg-linear-to-br from-[rgb(var(--card))] to-[rgb(var(--bg))] rounded-xl border border-gray-700 p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-semibold text-gray-300">
+                  <h2 className="text-2xl font-semibold text-[rgb(var(--text))]">
                     <div className="flex items-center">
                       <div className="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center mr-3">
                         <MapPin className="w-5 h-5 text-blue-400" />
@@ -389,51 +389,51 @@ const DataEntry = () => {
                 <div className="grid grid-cols-2 gap-6">
                   <div className="col-span-2 grid grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-gray-300 mb-2">House No.</label>
+                      <label className="block text-[rgb(var(--text))] mb-2">House No.</label>
                       <input
                         type="text"
                         name="houseNo"
                         value={formData.houseNo}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white"
+                        className="w-full px-4 py-3 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))]"
                         placeholder="e.g., 123"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-gray-300 mb-2">Street Name</label>
+                      <label className="block text-[rgb(var(--text))] mb-2">Street Name</label>
                       <input
                         type="text"
                         name="streetName"
                         value={formData.streetName}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white"
+                        className="w-full px-4 py-3 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))]"
                         placeholder="e.g., Main Street"
                       />
                     </div>
                   </div>
 
                   <div className="col-span-2">
-                    <label className="block text-gray-300 mb-2">Barangay</label>
+                    <label className="block text-[rgb(var(--text))] mb-2">Barangay</label>
                     <input
                       type="text"
                       name="barangay"
                       value={formData.barangay}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white"
+                      className="w-full px-4 py-3 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))]"
                       placeholder="e.g., Barangay 123"
                     />
                   </div>
 
                   {/* Region Dropdown */}
                   <div>
-                    <label className="block text-gray-300 mb-2">Region *</label>
+                    <label className="block text-[rgb(var(--text))] mb-2">Region *</label>
                     <div className="relative">
                       <select
                         name="region"
                         value={`${formData.region}|${formData.regionSlug}`}
                         onChange={handleRegionChange}
-                        className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white appearance-none pr-10"
+                        className="w-full px-4 py-3 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))] appearance-none pr-10"
                         required
                         disabled={regionLoading}
                       >
@@ -447,19 +447,19 @@ const DataEntry = () => {
                           )
                         })}
                       </select>
-                      <ChevronDown className="absolute right-3 top-3.5 w-5 h-5 text-gray-400 pointer-events-none" />
+                      <ChevronDown className="absolute right-3 top-3.5 w-5 h-5 text-[rgb(var(--text-muted))] pointer-events-none" />
                     </div>
                   </div>
 
                   {/* Province Dropdown */}
                   <div>
-                    <label className="block text-gray-300 mb-2">Province *</label>
+                    <label className="block text-[rgb(var(--text))] mb-2">Province *</label>
                     <div className="relative">
                       <select
                         name="province"
                         value={formData.province}
                         onChange={handleProvinceChange}
-                        className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white appearance-none pr-10"
+                        className="w-full px-4 py-3 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))] appearance-none pr-10"
                         required
                         disabled={!formData.region || provinces.length === 0 || autoSelectedProvince}
                       >
@@ -474,7 +474,7 @@ const DataEntry = () => {
                           )
                         })}
                       </select>
-                      <ChevronDown className="absolute right-3 top-3.5 w-5 h-5 text-gray-400 pointer-events-none" />
+                      <ChevronDown className="absolute right-3 top-3.5 w-5 h-5 text-[rgb(var(--text-muted))] pointer-events-none" />
                     </div>
                     {provinces.length === 0 && formData.region && !regionLoading && (
                       <p className="mt-1 text-sm text-yellow-400">
@@ -485,7 +485,7 @@ const DataEntry = () => {
 
                   {/* Town/City Dropdown */}
                   <div>
-                    <label className="block text-gray-300 mb-2">
+                    <label className="block text-[rgb(var(--text))] mb-2">
                       {autoSelectedProvince || (provinces.find(p => p.name === formData.province)?.hasCities) 
                         ? 'City/Municipality *' 
                         : 'Town/City *'}
@@ -495,7 +495,7 @@ const DataEntry = () => {
                         name="town"
                         value={formData.town}
                         onChange={handleTownChange}
-                        className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white appearance-none pr-10"
+                        className="w-full px-4 py-3 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))] appearance-none pr-10"
                         required
                         disabled={!formData.province || municipalities.length === 0}
                       >
@@ -513,7 +513,7 @@ const DataEntry = () => {
                           </option>
                         ))}
                       </select>
-                      <ChevronDown className="absolute right-3 top-3.5 w-5 h-5 text-gray-400 pointer-events-none" />
+                      <ChevronDown className="absolute right-3 top-3.5 w-5 h-5 text-[rgb(var(--text-muted))] pointer-events-none" />
                     </div>
                     {municipalities.length === 0 && formData.province && !regionLoading && (
                       <p className="mt-1 text-sm text-yellow-400">
@@ -526,13 +526,13 @@ const DataEntry = () => {
 
                   {/* Zip Code Field */}
                   <div>
-                    <label className="block text-gray-300 mb-2">Zip Code</label>
+                    <label className="block text-[rgb(var(--text))] mb-2">Zip Code</label>
                     <input
                       type="text"
                       name="zipCode"
                       value={formData.zipCode}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white"
+                      className="w-full px-4 py-3 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))]"
                       placeholder="Auto-filled from selection"
                       readOnly
                     />
@@ -551,9 +551,9 @@ const DataEntry = () => {
               </div>
 
               {/* Contact Information Card */}
-              <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-6">
+              <div className="bg-linear-to-br from-[rgb(var(--card))] to-[rgb(var(--bg))] rounded-xl border border-gray-700 p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-semibold text-gray-300">
+                  <h2 className="text-2xl font-semibold text-[rgb(var(--text))]">
                     <div className="flex items-center">
                       <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center mr-3">
                         <Phone className="w-5 h-5 text-green-400" />
@@ -565,25 +565,25 @@ const DataEntry = () => {
 
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-gray-300 mb-2">Contact Number</label>
+                    <label className="block text-[rgb(var(--text))] mb-2">Contact Number</label>
                     <input
                       type="tel"
                       name="contactNumber"
                       value={formData.contactNumber}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white"
+                      className="w-full px-4 py-3 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))]"
                       placeholder="e.g., +63 912 345 6789"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-gray-300 mb-2">Email Address</label>
+                    <label className="block text-[rgb(var(--text))] mb-2">Email Address</label>
                     <input
                       type="email"
                       name="emailAddress"
                       value={formData.emailAddress}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white"
+                      className="w-full px-4 py-3 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))]"
                       placeholder="e.g., name@example.com"
                     />
                   </div>
@@ -591,9 +591,9 @@ const DataEntry = () => {
               </div>
 
               {/* Family Composition Card */}
-              <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-xl border border-gray-700 p-6">
+              <div className="bg-linear-to-br from-[rgb(var(--card))] to-[rgb(var(--bg))] rounded-xl border border-gray-700 p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-semibold text-gray-300">
+                  <h2 className="text-2xl font-semibold text-[rgb(var(--text))]">
                     <div className="flex items-center">
                       <div className="w-8 h-8 bg-purple-500/20 rounded-lg flex items-center justify-center mr-3">
                         <Users className="w-5 h-5 text-purple-400" />
@@ -601,47 +601,47 @@ const DataEntry = () => {
                       Family Composition
                     </div>
                   </h2>
-                  <span className="text-sm text-gray-500 px-3 py-1 bg-gray-800 rounded-lg">
+                  <span className="text-sm text-gray-500 px-3 py-1 bg-[rgb(var(--bg))] rounded-lg">
                     {familyMembers.length} member{familyMembers.length !== 1 ? 's' : ''}
                   </span>
                 </div>
 
                 {/* Add New Member Form */}
-                <div className="mb-6 p-4 bg-gray-800/50 rounded-lg border border-gray-700">
-                  <h3 className="text-lg font-medium text-gray-300 mb-4 flex items-center space-x-2">
+                <div className="mb-6 p-4 bg-[rgb(var(--bg))] rounded-lg border border-gray-700">
+                  <h3 className="text-lg font-medium text-[rgb(var(--text))] mb-4 flex items-center space-x-2">
                     <UserPlus className="w-5 h-5" />
                     <span>Add Family Member</span>
                   </h3>
                   <div className="grid grid-cols-4 gap-4">
                     <div>
-                      <label className="block text-gray-400 text-sm mb-1">First Name</label>
+                      <label className="block text-[rgb(var(--text-muted))] text-sm mb-1">First Name</label>
                       <input
                         type="text"
                         name="firstName"
                         value={newMember.firstName}
                         onChange={handleMemberChange}
-                        className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded focus:ring-1 focus:ring-cyan-500 focus:border-transparent outline-none text-white text-sm"
+                        className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded focus:ring-1 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))] text-sm"
                         placeholder="First name"
                       />
                     </div>
                     <div>
-                      <label className="block text-gray-400 text-sm mb-1">Last Name</label>
+                      <label className="block text-[rgb(var(--text-muted))] text-sm mb-1">Last Name</label>
                       <input
                         type="text"
                         name="lastName"
                         value={newMember.lastName}
                         onChange={handleMemberChange}
-                        className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded focus:ring-1 focus:ring-cyan-500 focus:border-transparent outline-none text-white text-sm"
+                        className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded focus:ring-1 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))] text-sm"
                         placeholder="Last name"
                       />
                     </div>
                     <div>
-                      <label className="block text-gray-400 text-sm mb-1">Relationship</label>
+                      <label className="block text-[rgb(var(--text-muted))] text-sm mb-1">Relationship</label>
                       <select
                         name="relationship"
                         value={newMember.relationship}
                         onChange={handleMemberChange}
-                        className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded focus:ring-1 focus:ring-cyan-500 focus:border-transparent outline-none text-white text-sm"
+                        className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded focus:ring-1 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))] text-sm"
                       >
                         <option value="">Select relationship</option>
                         <option value="father">Father</option>
@@ -658,13 +658,13 @@ const DataEntry = () => {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-gray-400 text-sm mb-1">Age</label>
+                      <label className="block text-[rgb(var(--text-muted))] text-sm mb-1">Age</label>
                       <input
                         type="number"
                         name="age"
                         value={newMember.age}
                         onChange={handleMemberChange}
-                        className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded focus:ring-1 focus:ring-cyan-500 focus:border-transparent outline-none text-white text-sm"
+                        className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded focus:ring-1 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))] text-sm"
                         placeholder="Age"
                         min="0"
                         max="120"
@@ -675,7 +675,7 @@ const DataEntry = () => {
                     type="button"
                     onClick={addFamilyMember}
                     disabled={!newMember.firstName.trim() || !newMember.lastName.trim() || !newMember.relationship}
-                    className="mt-4 px-4 py-2 bg-linear-to-r from-cyan-600 to-blue-700 text-white font-medium rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="mt-4 px-4 py-2 bg-linear-to-r from-cyan-600 to-blue-700 text-[rgb(var(--blight))] font-medium rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Plus className="w-5 h-5 mr-2" />
                     Add Member
@@ -685,18 +685,18 @@ const DataEntry = () => {
                 {/* Family Members List */}
                 {familyMembers.length > 0 ? (
                   <div className="space-y-3">
-                    <h3 className="text-lg font-medium text-gray-300 mb-2">Family Members</h3>
+                    <h3 className="text-lg font-medium text-[rgb(var(--text))] mb-2">Family Members</h3>
                     {familyMembers.map((member) => (
-                      <div key={member.id} className="flex items-center justify-between p-4 bg-gray-800/30 rounded-lg border border-gray-700">
+                      <div key={member.id} className="flex items-center justify-between p-4 bg-[rgb(var(--bg))] rounded-lg border border-gray-700">
                         <div className="flex items-center">
                           <div className="w-10 h-10 rounded-full bg-linear-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center mr-4">
                             <User className="w-5 h-5 text-cyan-400" />
                           </div>
                           <div>
-                            <div className="text-gray-300 font-medium">
+                            <div className="text-[rgb(var(--text))] font-medium">
                               {member.firstName} {member.lastName}
                             </div>
-                            <div className="flex items-center text-sm text-gray-400">
+                            <div className="flex items-center text-sm text-[rgb(var(--text-muted))]">
                               <span className="capitalize">{member.relationship}</span>
                               {member.age && <span className="mx-2">•</span>}
                               {member.age && <span>{member.age} years old</span>}
@@ -706,7 +706,7 @@ const DataEntry = () => {
                         <button
                           type="button"
                           onClick={() => removeFamilyMember(member.id)}
-                          className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                          className="p-2 text-[rgb(var(--text-muted))] hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                         >
                           <Trash2 className="w-5 h-5" />
                         </button>
@@ -715,10 +715,10 @@ const DataEntry = () => {
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800/50 flex items-center justify-center">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[rgb(var(--bg))] flex items-center justify-center">
                       <Users className="w-8 h-8 text-gray-500" />
                     </div>
-                    <p className="text-gray-400">No family members added yet.</p>
+                    <p className="text-[rgb(var(--text-muted))]">No family members added yet.</p>
                     <p className="text-gray-500 text-sm mt-1">Use the form above to add family members.</p>
                   </div>
                 )}
@@ -728,14 +728,14 @@ const DataEntry = () => {
               <div className="flex justify-between items-center pt-6 border-t border-gray-800">
                 <div className="flex items-center space-x-2">
                   <CircleHelp className="w-4 h-4 text-gray-500" />
-                  <p className="text-gray-400 text-sm">
+                  <p className="text-[rgb(var(--text-muted))] text-sm">
                     All data is stored locally on your device using SQLite3.
                   </p>
                 </div>
                 <div className="flex space-x-4">
                   <Link
                     to="/dashboard"
-                    className="px-6 py-3 border border-gray-600 text-gray-300 font-medium rounded-lg hover:bg-gray-800 transition-colors flex items-center space-x-2"
+                    className="px-6 py-3 border border-gray-600 text-[rgb(var(--text))] font-medium rounded-lg hover:bg-[rgb(var(--bg))] transition-colors flex items-center space-x-2"
                   >
                     <X className="w-4 h-4" />
                     <span>Cancel</span>
@@ -743,7 +743,7 @@ const DataEntry = () => {
                   <button
                     type="submit"
                     disabled={dbLoading || !formData.region || !formData.province || !formData.town}
-                    className="px-8 py-3 bg-linear-to-r from-cyan-600 to-blue-700 text-white font-semibold rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/20 border border-cyan-500/30 flex items-center disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="px-8 py-3 bg-linear-to-r from-cyan-600 to-blue-700 text-[rgb(var(--blight))] font-semibold rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/20 border border-cyan-500/30 flex items-center disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
                     {dbLoading ? (
                       <>
@@ -765,22 +765,22 @@ const DataEntry = () => {
       </div>
 
       {/* Status Bar */}
-      <div className="h-8 bg-gray-800 border-t border-gray-700 flex items-center justify-between px-4">
+      <div className="h-8 bg-[rgb(var(--bg))] border-t border-gray-700 flex items-center justify-between px-4">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
-            <span className="text-gray-400 text-sm">Database: Ready on Save</span>
+            <span className="text-[rgb(var(--text-muted))] text-sm">Database: Ready on Save</span>
           </div>
           <span className="text-gray-600">|</span>
-          <span className="text-gray-400 text-sm flex items-center space-x-2">
+          <span className="text-[rgb(var(--text-muted))] text-sm flex items-center space-x-2">
             <Users className="w-3 h-3" />
             <span>Form: {familyMembers.length} family members</span>
           </span>
         </div>
         <div className="flex items-center space-x-4">
-          <span className="text-gray-400 text-sm">Data Entry Mode</span>
+          <span className="text-[rgb(var(--text-muted))] text-sm">Data Entry Mode</span>
           <span className="text-gray-600">|</span>
-          <span className="text-gray-400 text-sm flex items-center space-x-2">
+          <span className="text-[rgb(var(--text-muted))] text-sm flex items-center space-x-2">
             <CheckCircle className="w-3 h-3" />
             <span>Auto-save: Enabled</span>
           </span>

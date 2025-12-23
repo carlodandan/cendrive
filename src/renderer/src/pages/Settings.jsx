@@ -52,11 +52,6 @@ const Settings = () => {
     exportPermission: true
   })
 
-  // UI/Theme Settings
-  const [themeSettings, setThemeSettings] = useState({
-    theme: 'dark', // dark, light, system
-  })
-
   // App Info
   const [appInfo, setAppInfo] = useState({
     app: '',
@@ -121,12 +116,46 @@ const Settings = () => {
     }))
   }
 
-  const handleThemeSettingChange = (key, value) => {
-    setThemeSettings(prev => ({
-      ...prev,
-      [key]: value
-    }))
+  const [themeSettings, setThemeSettings] = useState({
+    theme: 'system'
+  })
+
+  const applyThemeClass = (theme, isDark) => {
+    const root = document.documentElement
+
+    // remove explicit light first
+    root.classList.remove('light')
+
+    if (theme === 'light') {
+      root.classList.add('light')
+    }
+
+    if (theme === 'system' && !isDark) {
+      root.classList.add('light')
+    }
   }
+
+
+  const handleThemeSettingChange = async (key, value) => {
+    if (key !== 'theme') return
+  
+    setThemeSettings(prev => ({ ...prev, theme: value }))
+  
+    const isDark = await window.themeAPI.setTheme(value)
+    applyThemeClass(value, isDark)
+  }
+  
+  useEffect(() => {
+    const initTheme = async () => {
+      const theme = await window.themeAPI.getTheme()
+      const isDark = await window.themeAPI.setTheme(theme)
+  
+      setThemeSettings(prev => ({ ...prev, theme }))
+      applyThemeClass(theme, isDark)
+    }
+  
+    initTheme()
+  }, [])
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target
@@ -248,15 +277,6 @@ const Settings = () => {
         anonymizeReports: false,
         exportPermission: true
       })
-
-      
-      setThemeSettings({
-        theme: 'dark',
-        fontSize: 'medium',
-        density: 'comfortable',
-        animations: true,
-        showStats: true
-      })
       
       alert('Settings reset to default values!')
     }
@@ -284,15 +304,15 @@ const Settings = () => {
   }
 
   return (
-    <div className="h-screen w-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col overflow-hidden">
+    <div className="h-screen w-screen bg-gradient-to-br from-[rgb(var(--bg))] via-[rgb(var(--card))] to-[rgb(var(--bg))] flex flex-col overflow-hidden">
       {/* Windows-style Title Bar */}
-      <div className="h-10 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-4">
+      <div className="h-10 bg-[rgb(var(--bg))] border-b border-gray-700 flex items-center justify-between px-4">
         <div className="flex items-center space-x-3">
           <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
             <div className="w-6 h-6 bg-gradient-to-br from-cyan-500 to-blue-600 rounded flex items-center justify-center">
-              <SettingsIcon className="w-4 h-4 text-white" />
+              <SettingsIcon className="w-4 h-4 text-[rgb(var(--blight))]" />
             </div>
-            <span className="text-gray-300 font-medium text-sm"><span className="text-amber-300">Cen</span>Drive Settings</span>
+            <span className="text-[rgb(var(--text))] font-medium text-sm"><span className="text-amber-300">Cen</span>Drive Settings</span>
           </Link>
         </div>
       </div>
@@ -310,7 +330,7 @@ const Settings = () => {
               <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
                 Application Settings
               </h1>
-              <p className="text-gray-400">
+              <p className="text-[rgb(var(--text-muted))]">
                 Configure your CenDrive application preferences and manage system options
               </p>
             </div>
@@ -318,15 +338,15 @@ const Settings = () => {
             {/* Settings Sections */}
             <div className="space-y-8">
               {/* Database Settings */}
-              <div className="bg-gray-800/30 rounded-xl border border-gray-700 p-6">
+              <div className="bg-[rgb(var(--bg))] rounded-xl border border-gray-700 p-6">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-lg flex items-center justify-center border border-blue-500/30">
                       <Database className="w-6 h-6 text-blue-400" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-semibold text-gray-300">Database Settings</h2>
-                      <p className="text-gray-400 text-sm">Configure database backup and maintenance</p>
+                      <h2 className="text-2xl font-semibold text-[rgb(var(--text))]">Database Settings</h2>
+                      <p className="text-[rgb(var(--text-muted))] text-sm">Configure database backup and maintenance</p>
                     </div>
                   </div>
                 </div>
@@ -336,7 +356,7 @@ const Settings = () => {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="text-gray-300 font-medium">Auto Backup</h3>
+                        <h3 className="text-[rgb(var(--text))] font-medium">Auto Backup</h3>
                         <p className="text-gray-500 text-sm">Automatically backup database</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
@@ -346,17 +366,17 @@ const Settings = () => {
                           onChange={(e) => handleDatabaseSettingChange('autoBackup', e.target.checked)}
                           className="sr-only peer"
                         />
-                        <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                        <div className="w-11 h-6 bg-[rgb(var(--muted))] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
                       </label>
                     </div>
 
                     {/* Backup Frequency */}
                     <div>
-                      <label className="block text-gray-300 mb-2">Backup Frequency</label>
+                      <label className="block text-[rgb(var(--text))] mb-2">Backup Frequency</label>
                       <select
                         value={databaseSettings.backupFrequency}
                         onChange={(e) => handleDatabaseSettingChange('backupFrequency', e.target.value)}
-                        className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white"
+                        className="w-full px-4 py-2.5 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))]"
                         disabled={!databaseSettings.autoBackup}
                       >
                         <option value="daily">Daily</option>
@@ -367,7 +387,7 @@ const Settings = () => {
 
                     {/* Cache Size */}
                     <div>
-                      <label className="block text-gray-300 mb-2">
+                      <label className="block text-[rgb(var(--text))] mb-2">
                         Cache Size: {databaseSettings.cacheSize} MB
                       </label>
                       <input
@@ -376,7 +396,7 @@ const Settings = () => {
                         max="500"
                         value={databaseSettings.cacheSize}
                         onChange={(e) => handleDatabaseSettingChange('cacheSize', parseInt(e.target.value))}
-                        className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                        className="w-full h-2 bg-[rgb(var(--muted))] rounded-lg appearance-none cursor-pointer"
                       />
                       <div className="flex justify-between text-gray-500 text-sm mt-1">
                         <span>10 MB</span>
@@ -389,11 +409,11 @@ const Settings = () => {
                   <div className="space-y-4">
                     {/* Backup Location */}
                     <div>
-                      <label className="block text-gray-300 mb-2">Backup Location</label>
+                      <label className="block text-[rgb(var(--text))] mb-2">Backup Location</label>
                       <select
                         value={databaseSettings.backupLocation}
                         onChange={(e) => handleDatabaseSettingChange('backupLocation', e.target.value)}
-                        className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white"
+                        className="w-full px-4 py-2.5 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))]"
                       >
                         <option value="local">Local Storage</option>
                         <option value="external">External Drive</option>
@@ -403,7 +423,7 @@ const Settings = () => {
 
                     {/* Keep Backups For */}
                     <div>
-                      <label className="block text-gray-300 mb-2">Keep Backups For</label>
+                      <label className="block text-[rgb(var(--text))] mb-2">Keep Backups For</label>
                       <div className="flex items-center space-x-4">
                         <input
                           type="number"
@@ -411,9 +431,9 @@ const Settings = () => {
                           max="365"
                           value={databaseSettings.keepBackupsFor}
                           onChange={(e) => handleDatabaseSettingChange('keepBackupsFor', parseInt(e.target.value))}
-                          className="w-24 px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white"
+                          className="w-24 px-4 py-2.5 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))]"
                         />
-                        <span className="text-gray-400">days</span>
+                        <span className="text-[rgb(var(--text-muted))]">days</span>
                       </div>
                     </div>
 
@@ -421,7 +441,7 @@ const Settings = () => {
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="text-gray-300 font-medium text-sm">Compress Backups</h3>
+                          <h3 className="text-[rgb(var(--text))] font-medium text-sm">Compress Backups</h3>
                           <p className="text-gray-500 text-xs">Reduce backup file size</p>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer">
@@ -431,13 +451,13 @@ const Settings = () => {
                             onChange={(e) => handleDatabaseSettingChange('compressBackups', e.target.checked)}
                             className="sr-only peer"
                           />
-                          <div className="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
+                          <div className="w-9 h-5 bg-[rgb(var(--muted))] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
                         </label>
                       </div>
 
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="text-gray-300 font-medium text-sm">Enable Logging</h3>
+                          <h3 className="text-[rgb(var(--text))] font-medium text-sm">Enable Logging</h3>
                           <p className="text-gray-500 text-xs">Log database operations</p>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer">
@@ -447,7 +467,7 @@ const Settings = () => {
                             onChange={(e) => handleDatabaseSettingChange('enableLogging', e.target.checked)}
                             className="sr-only peer"
                           />
-                          <div className="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
+                          <div className="w-9 h-5 bg-[rgb(var(--muted))] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
                         </label>
                       </div>
                     </div>
@@ -457,7 +477,7 @@ const Settings = () => {
                 {/* Backup Actions */}
                 <div className="mt-6 pt-6 border-t border-gray-700">
                   <div className="flex items-center justify-between">
-                    <div className="text-gray-400 text-sm">
+                    <div className="text-[rgb(var(--text-muted))] text-sm">
                       {backupStatus.lastBackup && (
                         <span className="text-green-400">
                           <Check className="w-4 h-4 inline mr-2" />
@@ -475,7 +495,7 @@ const Settings = () => {
                       <button
                         onClick={performBackup}
                         disabled={backupStatus.inProgress}
-                        className="px-4 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-medium rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 flex items-center space-x-2 disabled:opacity-50"
+                        className="px-4 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-700 text-[rgb(var(--blight))] font-medium rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 flex items-center space-x-2 disabled:opacity-50"
                       >
                         {backupStatus.inProgress ? (
                           <RefreshCw className="w-4 h-4 animate-spin" />
@@ -490,15 +510,15 @@ const Settings = () => {
               </div>
 
               {/* Privacy & Security */}
-              <div className="bg-gray-800/30 rounded-xl border border-gray-700 p-6">
+              <div className="bg-[rgb(var(--bg))] rounded-xl border border-gray-700 p-6">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-lg flex items-center justify-center border border-green-500/30">
                       <Shield className="w-6 h-6 text-green-400" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-semibold text-gray-300">Privacy & Security</h2>
-                      <p className="text-gray-400 text-sm">Configure security and data protection</p>
+                      <h2 className="text-2xl font-semibold text-[rgb(var(--text))]">Privacy & Security</h2>
+                      <p className="text-[rgb(var(--text-muted))] text-sm">Configure security and data protection</p>
                     </div>
                   </div>
                 </div>
@@ -508,7 +528,7 @@ const Settings = () => {
                     {/* Require Password */}
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="text-gray-300 font-medium">Require Password</h3>
+                        <h3 className="text-[rgb(var(--text))] font-medium">Require Password</h3>
                         <p className="text-gray-500 text-sm">Password protect the application</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
@@ -518,14 +538,14 @@ const Settings = () => {
                           onChange={(e) => handlePrivacySettingChange('requirePassword', e.target.checked)}
                           className="sr-only peer"
                         />
-                        <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                        <div className="w-11 h-6 bg-[rgb(var(--muted))] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
                       </label>
                     </div>
 
                     {/* Auto Lock */}
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="text-gray-300 font-medium">Auto Lock</h3>
+                        <h3 className="text-[rgb(var(--text))] font-medium">Auto Lock</h3>
                         <p className="text-gray-500 text-sm">Lock application after inactivity</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
@@ -536,13 +556,13 @@ const Settings = () => {
                           className="sr-only peer"
                           disabled={!privacySettings.requirePassword}
                         />
-                        <div className={`w-11 h-6 rounded-full peer ${!privacySettings.requirePassword ? 'bg-gray-800' : 'bg-gray-700'} peer-focus:outline-none peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600`}></div>
+                        <div className={`w-11 h-6 rounded-full peer ${!privacySettings.requirePassword ? 'bg-[rgb(var(--bg))]' : 'bg-[rgb(var(--muted))]'} peer-focus:outline-none peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600`}></div>
                       </label>
                     </div>
 
                     {/* Lock Timeout */}
                     <div>
-                      <label className="block text-gray-300 mb-2">Lock Timeout</label>
+                      <label className="block text-[rgb(var(--text))] mb-2">Lock Timeout</label>
                       <div className="flex items-center space-x-4">
                         <input
                           type="number"
@@ -550,10 +570,10 @@ const Settings = () => {
                           max="60"
                           value={privacySettings.lockTimeout}
                           onChange={(e) => handlePrivacySettingChange('lockTimeout', parseInt(e.target.value))}
-                          className="w-24 px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white"
+                          className="w-24 px-4 py-2.5 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))]"
                           disabled={!privacySettings.autoLock || !privacySettings.requirePassword}
                         />
-                        <span className="text-gray-400">minutes</span>
+                        <span className="text-[rgb(var(--text-muted))]">minutes</span>
                       </div>
                     </div>
                   </div>
@@ -562,7 +582,7 @@ const Settings = () => {
                     {/* Data Encryption */}
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="text-gray-300 font-medium">Data Encryption</h3>
+                        <h3 className="text-[rgb(var(--text))] font-medium">Data Encryption</h3>
                         <p className="text-gray-500 text-sm">Encrypt sensitive data at rest</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
@@ -572,14 +592,14 @@ const Settings = () => {
                           onChange={(e) => handlePrivacySettingChange('dataEncryption', e.target.checked)}
                           className="sr-only peer"
                         />
-                        <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                        <div className="w-11 h-6 bg-[rgb(var(--muted))] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
                       </label>
                     </div>
 
                     {/* Anonymize Reports */}
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="text-gray-300 font-medium">Anonymize Reports</h3>
+                        <h3 className="text-[rgb(var(--text))] font-medium">Anonymize Reports</h3>
                         <p className="text-gray-500 text-sm">Remove personal info from exports</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
@@ -589,14 +609,14 @@ const Settings = () => {
                           onChange={(e) => handlePrivacySettingChange('anonymizeReports', e.target.checked)}
                           className="sr-only peer"
                         />
-                        <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                        <div className="w-11 h-6 bg-[rgb(var(--muted))] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
                       </label>
                     </div>
 
                     {/* Export Permission */}
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="text-gray-300 font-medium">Export Permission</h3>
+                        <h3 className="text-[rgb(var(--text))] font-medium">Export Permission</h3>
                         <p className="text-gray-500 text-sm">Require confirmation for data export</p>
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
@@ -606,7 +626,7 @@ const Settings = () => {
                           onChange={(e) => handlePrivacySettingChange('exportPermission', e.target.checked)}
                           className="sr-only peer"
                         />
-                        <div className="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
+                        <div className="w-11 h-6 bg-[rgb(var(--muted))] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-600"></div>
                       </label>
                     </div>
                   </div>
@@ -615,52 +635,52 @@ const Settings = () => {
                 {/* Change Password Section */}
                 {privacySettings.requirePassword && (
                   <div className="mt-6 pt-6 border-t border-gray-700">
-                    <h3 className="text-xl font-semibold text-gray-300 mb-4 flex items-center space-x-2">
+                    <h3 className="text-xl font-semibold text-[rgb(var(--text))] mb-4 flex items-center space-x-2">
                       <Key className="w-5 h-5" />
                       <span>Change Application Password</span>
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
-                        <label className="block text-gray-300 mb-2">Current Password</label>
+                        <label className="block text-[rgb(var(--text))] mb-2">Current Password</label>
                         <div className="relative">
                           <input
                             type={showPassword ? "text" : "password"}
                             name="current"
                             value={password.current}
                             onChange={handlePasswordChange}
-                            className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white pr-10"
+                            className="w-full px-4 py-2.5 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))] pr-10"
                           />
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-3 text-gray-400 hover:text-gray-300"
+                            className="absolute right-3 top-3 text-[rgb(var(--text-muted))] hover:text-[rgb(var(--text))]"
                           >
                             {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                           </button>
                         </div>
                       </div>
                       <div>
-                        <label className="block text-gray-300 mb-2">New Password</label>
+                        <label className="block text-[rgb(var(--text))] mb-2">New Password</label>
                         <input
                           type={showPassword ? "text" : "password"}
                           name="new"
                           value={password.new}
                           onChange={handlePasswordChange}
-                          className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white"
+                          className="w-full px-4 py-2.5 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))]"
                         />
                       </div>
                       <div>
-                        <label className="block text-gray-300 mb-2">Confirm Password</label>
+                        <label className="block text-[rgb(var(--text))] mb-2">Confirm Password</label>
                         <input
                           type={showPassword ? "text" : "password"}
                           name="confirm"
                           value={password.confirm}
                           onChange={handlePasswordChange}
-                          className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-white"
+                          className="w-full px-4 py-2.5 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-[rgb(var(--blight))]"
                         />
                       </div>
                     </div>
-                    <button className="mt-4 px-4 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-medium rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300">
+                    <button className="mt-4 px-4 py-2.5 bg-gradient-to-r from-cyan-600 to-blue-700 text-[rgb(var(--blight))] font-medium rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300">
                       Update Password
                     </button>
                   </div>
@@ -668,20 +688,20 @@ const Settings = () => {
               </div>
 
               {/* UI/Theme Settings */}
-              <div className="bg-gray-800/30 rounded-xl border border-gray-700 p-6">
+              <div className="bg-[rgb(var(--bg))] rounded-xl border border-gray-700 p-6">
                 <div className="flex items-center space-x-3 mb-6">
                   <div className="w-10 h-10 bg-gradient-to-br from-amber-500/20 to-orange-500/20 rounded-lg flex items-center justify-center border border-amber-500/30">
                     <Palette className="w-6 h-6 text-amber-400" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-semibold text-gray-300">Appearance</h2>
-                    <p className="text-gray-400 text-sm">Customize the look and feel</p>
+                    <h2 className="text-2xl font-semibold text-[rgb(var(--text))]">Appearance</h2>
+                    <p className="text-[rgb(var(--text-muted))] text-sm">Customize the look and feel</p>
                   </div>
                 </div>
 
                 {/* Theme Selection */}
                 <div>
-                  <label className="block text-gray-300 mb-2">Theme</label>
+                  <label className="block text-[rgb(var(--text))] mb-2">Theme</label>
                   <div className="flex space-x-3">
                     {[
                       { value: 'dark', icon: <Moon className="w-5 h-5" />, label: 'Dark' },
@@ -694,14 +714,14 @@ const Settings = () => {
                         className={`flex-1 flex flex-col items-center justify-center p-4 rounded-lg border ${
                           themeSettings.theme === theme.value
                             ? 'border-cyan-500 bg-cyan-500/10'
-                            : 'border-gray-700 bg-gray-800 hover:bg-gray-700/50'
+                            : 'border-gray-700 bg-[rgb(var(--bg))] hover:bg-[rgb(var(--muted))]/50'
                         } transition-colors`}
                       >
                         <div
                           className={`mb-2 ${
                             themeSettings.theme === theme.value
                               ? 'text-cyan-400'
-                              : 'text-gray-400'
+                              : 'text-[rgb(var(--text-muted))]'
                           }`}
                         >
                           {theme.icon}
@@ -710,7 +730,7 @@ const Settings = () => {
                           className={`text-sm font-medium ${
                             themeSettings.theme === theme.value
                               ? 'text-cyan-300'
-                              : 'text-gray-300'
+                              : 'text-[rgb(var(--text))]'
                           }`}
                         >
                           {theme.label}
@@ -722,34 +742,34 @@ const Settings = () => {
               </div>
 
               {/* Data Management */}
-              <div className="bg-gray-800/30 rounded-xl border border-gray-700 p-6">
+              <div className="bg-[rgb(var(--bg))] rounded-xl border border-gray-700 p-6">
                 <div className="flex items-center space-x-3 mb-6">
                   <div className="w-10 h-10 bg-gradient-to-br from-red-500/20 to-rose-500/20 rounded-lg flex items-center justify-center border border-red-500/30">
                     <HardDrive className="w-6 h-6 text-red-400" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-semibold text-gray-300">Data Management</h2>
-                    <p className="text-gray-400 text-sm">Manage application data and storage</p>
+                    <h2 className="text-2xl font-semibold text-[rgb(var(--text))]">Data Management</h2>
+                    <p className="text-[rgb(var(--text-muted))] text-sm">Manage application data and storage</p>
                   </div>
                 </div>
 
                 {/* Actions */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Export */}
-                  <div className="bg-gray-800/50 rounded-lg p-5 border border-gray-700 flex flex-col justify-between">
+                  <div className="bg-[rgb(var(--bg))] rounded-lg p-5 border border-gray-700 flex flex-col justify-between">
                     <div className="flex items-center space-x-3 mb-4">
                       <div className="p-2 bg-green-500/10 rounded-lg">
                         <FileText className="w-5 h-5 text-green-400" />
                       </div>
                       <div>
-                        <h3 className="text-gray-300 font-medium">Export to Excel</h3>
-                        <p className="text-gray-400 text-sm">Download database as .xlsx</p>
+                        <h3 className="text-[rgb(var(--text))] font-medium">Export to Excel</h3>
+                        <p className="text-[rgb(var(--text-muted))] text-sm">Download database as .xlsx</p>
                       </div>
                     </div>
 
                     <button
                       onClick={exportToExcel}
-                      className="w-full px-4 py-2.5 bg-gradient-to-r from-green-600 to-emerald-700 text-white font-medium rounded-lg hover:from-green-500 hover:to-emerald-600 transition-all flex items-center justify-center space-x-2"
+                      className="w-full px-4 py-2.5 bg-gradient-to-r from-green-600 to-emerald-700 text-[rgb(var(--blight))] font-medium rounded-lg hover:from-green-500 hover:to-emerald-600 transition-all flex items-center justify-center space-x-2"
                     >
                       <Download className="w-5 h-5" />
                       <span>Export</span>
@@ -757,20 +777,20 @@ const Settings = () => {
                   </div>
 
                   {/* Clear Cache */}
-                  <div className="bg-gray-800/50 rounded-lg p-5 border border-gray-700 flex flex-col justify-between">
+                  <div className="bg-[rgb(var(--bg))] rounded-lg p-5 border border-gray-700 flex flex-col justify-between">
                     <div className="flex items-center space-x-3 mb-4">
                       <div className="p-2 bg-red-500/10 rounded-lg">
                         <Trash2 className="w-5 h-5 text-red-400" />
                       </div>
                       <div>
-                        <h3 className="text-gray-300 font-medium">Clear Cache</h3>
-                        <p className="text-gray-400 text-sm">Remove temporary data</p>
+                        <h3 className="text-[rgb(var(--text))] font-medium">Clear Cache</h3>
+                        <p className="text-[rgb(var(--text-muted))] text-sm">Remove temporary data</p>
                       </div>
                     </div>
 
                     <button
                       onClick={clearCache}
-                      className="w-full px-4 py-2.5 bg-gradient-to-r from-red-600 to-rose-700 text-white font-medium rounded-lg hover:from-red-500 hover:to-rose-600 transition-all"
+                      className="w-full px-4 py-2.5 bg-gradient-to-r from-red-600 to-rose-700 text-[rgb(var(--blight))] font-medium rounded-lg hover:from-red-500 hover:to-rose-600 transition-all"
                     >
                       Clear Cache
                     </button>
@@ -780,12 +800,12 @@ const Settings = () => {
                 {/* Reset Settings */}
                 <div className="mt-6 pt-6 border-t border-gray-700 flex items-center justify-between">
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-300">Reset to Default</h3>
-                    <p className="text-gray-400 text-sm">Restore all settings</p>
+                    <h3 className="text-lg font-semibold text-[rgb(var(--text))]">Reset to Default</h3>
+                    <p className="text-[rgb(var(--text-muted))] text-sm">Restore all settings</p>
                   </div>
                   <button
                     onClick={resetSettings}
-                    className="px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-800 text-white font-medium rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all border border-gray-600"
+                    className="px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-800 text-[rgb(var(--blight))] font-medium rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all border border-gray-600"
                   >
                     Reset
                   </button>
@@ -793,15 +813,15 @@ const Settings = () => {
               </div>
 
               {/* Application Info */}
-              <div className="bg-gray-800/30 rounded-xl border border-gray-700 p-6">
+              <div className="bg-[rgb(var(--bg))] rounded-xl border border-gray-700 p-6">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-gray-500/20 to-gray-600/20 rounded-lg flex items-center justify-center border border-gray-500/30">
-                      <Info className="w-6 h-6 text-gray-400" />
+                      <Info className="w-6 h-6 text-[rgb(var(--text-muted))]" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-semibold text-gray-300">Application Information</h2>
-                      <p className="text-gray-400 text-sm">System details and version information</p>
+                      <h2 className="text-2xl font-semibold text-[rgb(var(--text))]">Application Information</h2>
+                      <p className="text-[rgb(var(--text-muted))] text-sm">System details and version information</p>
                     </div>
                   </div>
                 </div>
@@ -809,37 +829,37 @@ const Settings = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
-                      <span className="text-gray-400">Application Version</span>
+                      <span className="text-[rgb(var(--text-muted))]">Application Version</span>
                       <span className="text-cyan-400 font-medium">{appInfo.app}</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
-                      <span className="text-gray-400">Electron Version</span>
+                      <span className="text-[rgb(var(--text-muted))]">Electron Version</span>
                       <span className="text-cyan-400 font-medium">{appInfo.runtime.electron}</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
-                      <span className="text-gray-400">Node.js Version</span>
+                      <span className="text-[rgb(var(--text-muted))]">Node.js Version</span>
                       <span className="text-cyan-400 font-medium">{appInfo.runtime.node}</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
-                      <span className="text-gray-400">Chrome Version</span>
+                      <span className="text-[rgb(var(--text-muted))]">Chrome Version</span>
                       <span className="text-cyan-400 font-medium">{appInfo.runtime.chrome}</span>
                     </div>
                   </div>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
-                      <span className="text-gray-400">Database Type</span>
+                      <span className="text-[rgb(var(--text-muted))]">Database Type</span>
                       <span className="text-cyan-400 font-medium">SQLite3</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
-                      <span className="text-gray-400">Database Version</span>
+                      <span className="text-[rgb(var(--text-muted))]">Database Version</span>
                       <span className="text-cyan-400 font-medium">{appInfo.libs.betterSqlite3}</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
-                      <span className="text-gray-400">Platform</span>
+                      <span className="text-[rgb(var(--text-muted))]">Platform</span>
                       <span className="text-cyan-400 font-medium">Windows 10/11 ({appInfo.runtime.os_platform}_{appInfo.runtime.os_arch})</span>
                     </div>
                     <div className="flex justify-between items-center pb-3 border-b border-gray-700">
-                      <span className="text-gray-400">Build Date</span>
+                      <span className="text-[rgb(var(--text-muted))]">Build Date</span>
                       <span className="text-cyan-400 font-medium">{new Date().toLocaleDateString()}</span>
                     </div>
                   </div>
@@ -848,18 +868,18 @@ const Settings = () => {
             </div>
 
             {/* Save Settings */}
-            <div className="mt-8 p-6 bg-gradient-to-r from-gray-800/50 to-gray-900/50 rounded-xl border border-gray-700">
+            <div className="mt-8 p-6 bg-gradient-to-r from-[rgb(var(--card))] to-[rgb(var(--bg))] rounded-xl border border-gray-700">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-xl font-bold text-gray-300 mb-2">Save Settings</h3>
-                  <p className="text-gray-400 text-sm">
+                  <h3 className="text-xl font-bold text-[rgb(var(--text))] mb-2">Save Settings</h3>
+                  <p className="text-[rgb(var(--text-muted))] text-sm">
                     Apply all changes made to the settings
                   </p>
                 </div>
                 <button
                   onClick={saveSettings}
                   disabled={saving}
-                  className="px-8 py-3 bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-semibold rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/20 border border-cyan-500/30 flex items-center space-x-2 disabled:opacity-50"
+                  className="px-8 py-3 bg-gradient-to-r from-cyan-600 to-blue-700 text-[rgb(var(--blight))] font-semibold rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/20 border border-cyan-500/30 flex items-center space-x-2 disabled:opacity-50"
                 >
                   {saving ? (
                     <>
@@ -899,21 +919,21 @@ const Settings = () => {
       </div>
 
       {/* Status Bar */}
-      <div className="h-8 bg-gray-800 border-t border-gray-700 flex items-center justify-between px-4">
+      <div className="h-8 bg-[rgb(var(--bg))] border-t border-gray-700 flex items-center justify-between px-4">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            <span className="text-gray-400 text-sm">
+            <span className="text-[rgb(var(--text-muted))] text-sm">
               Settings: Ready to save
             </span>
           </div>
           <span className="text-gray-600">|</span>
-          <span className="text-gray-400 text-sm">
+          <span className="text-[rgb(var(--text-muted))] text-sm">
             {saving ? 'Saving changes...' : 'Changes pending'}
           </span>
         </div>
         <div className="flex items-center space-x-4">
-          <span className="text-gray-400 text-sm">
+          <span className="text-[rgb(var(--text-muted))] text-sm">
             Local Configuration • Auto-save: {databaseSettings.autoBackup ? 'Enabled' : 'Disabled'}
           </span>
         </div>

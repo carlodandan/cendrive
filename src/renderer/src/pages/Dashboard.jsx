@@ -135,15 +135,15 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="h-screen w-screen bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col overflow-hidden select-none">
+    <div className="h-screen w-screen bg-linear-to-br from-[rgb(var(--bg))] via-[rgb(var(--card))] to-[rgb(var(--bg))] flex flex-col overflow-hidden select-none">
       {/* Windows-style Title Bar */}
-      <div className="h-10 bg-gray-800 border-b border-gray-700 flex items-center justify-between px-4">
+      <div className="h-10 bg-[rgb(var(--bg))] border-b border-gray-700 flex items-center justify-between px-4">
         <div className="flex items-center space-x-3">
           <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
             <div className="w-6 h-6 bg-linear-to-br from-cyan-500 to-blue-600 rounded flex items-center justify-center">
-              <Menu className="w-4 h-4 text-white" />
+              <Menu className="w-4 h-4 text-[rgb(var(--blight))]" />
             </div>
-            <span className="text-gray-300 font-medium text-sm"><span className="text-amber-300">Cen</span>Drive v1.0</span>
+            <span className="text-[rgb(var(--text))] font-medium text-sm"><span className="text-amber-300">Cen</span>Drive v1.0</span>
           </Link>
         </div>
       </div>
@@ -163,7 +163,7 @@ const Dashboard = () => {
                   <h1 className="text-4xl font-bold bg-linear-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
                     <span className="text-amber-300">Cen</span>Drive
                   </h1>
-                  <p className="text-gray-400">
+                  <p className="text-[rgb(var(--text-muted))]">
                     {households.length} household{households.length !== 1 ? 's' : ''} displayed
                     {searchTerm && ` • Search results for "${searchTerm}"`}
                   </p>
@@ -176,14 +176,14 @@ const Dashboard = () => {
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       placeholder="Search households..."
-                      className="pl-10 pr-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 w-64"
+                      className="pl-10 pr-4 py-2.5 bg-[rgb(var(--bg))] border border-gray-700 rounded-lg text-[rgb(var(--text))] placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 w-64"
                     />
                     <Search className="w-5 h-5 text-gray-500 absolute left-3 top-3" />
                     {searchTerm && (
                       <button
                         type="button"
                         onClick={handleClearSearch}
-                        className="absolute right-3 top-3 text-gray-500 hover:text-gray-300"
+                        className="absolute right-3 top-3 text-gray-500 hover:text-[rgb(var(--text))]"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -192,7 +192,7 @@ const Dashboard = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-6 py-2.5 bg-linear-to-r from-cyan-600 to-blue-700 text-white font-medium rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                    className="px-6 py-2.5 bg-linear-to-r from-cyan-600 to-blue-700 text-[rgb(var(--blight))] font-medium rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
                   >
                     <Search className="w-4 h-4" />
                     <span>{loading ? 'Searching...' : 'Search'}</span>
@@ -206,13 +206,13 @@ const Dashboard = () => {
               <div className="flex items-center justify-center py-20">
                 <div className="text-center">
                   <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-500 mb-4"></div>
-                  <p className="text-gray-400">Loading census data...</p>
+                  <p className="text-[rgb(var(--text-muted))]">Loading census data...</p>
                 </div>
               </div>
             ) : households.length > 0 ? (
-              <div className="bg-gray-800/30 rounded-xl border border-gray-700 overflow-hidden mb-8">
+              <div className="bg-[rgb(var(--bg))] rounded-xl border border-gray-700 overflow-hidden mb-8">
                 {/* Table Header */}
-                <div className="grid grid-cols-12 gap-4 p-4 border-b border-gray-700 bg-gray-800/50 text-gray-400 text-sm font-medium">
+                <div className="grid grid-cols-12 gap-4 p-4 border-b border-gray-700 bg-[rgb(var(--bg))] text-[rgb(var(--text-muted))] text-sm font-medium">
                   <div className="col-span-3">Household Head</div>
                   <div className="col-span-2">Contact</div>
                   <div className="col-span-3">Address</div>
@@ -226,7 +226,7 @@ const Dashboard = () => {
                   {households.map((household) => (
                     <div key={household.id}>
                       {/* Main Household Row */}
-                      <div className="grid grid-cols-12 gap-4 p-4 hover:bg-gray-800/20 transition-colors duration-200">
+                      <div className="grid grid-cols-12 gap-4 p-4 hover:bg-[rgb(var(--bg))] transition-colors duration-200">
                         {/* Name Column */}
                         <div className="col-span-3">
                           <div className="flex items-center space-x-3">
@@ -238,7 +238,7 @@ const Dashboard = () => {
                             </div>
 
                             <div>
-                              <div className="text-gray-300 font-medium">
+                              <div className="text-[rgb(var(--text))] font-medium">
                                 {household.first_name}
                                 {household.middle_name && ` ${household.middle_name}`}
                                 {` ${household.last_name}`}
@@ -252,13 +252,13 @@ const Dashboard = () => {
                         <div className="col-span-2">
                           <div className="space-y-1">
                             {household.contact_number && (
-                              <div className="text-gray-300 text-sm flex items-center space-x-2">
+                              <div className="text-[rgb(var(--text))] text-sm flex items-center space-x-2">
                                 <Phone className="w-4 h-4 text-gray-500 flex-shrink-0" />
                                 <span className="truncate">{household.contact_number}</span>
                               </div>
                             )}
                             {household.email_address && (
-                              <div className="text-gray-300 text-sm flex items-center space-x-2">
+                              <div className="text-[rgb(var(--text))] text-sm flex items-center space-x-2">
                                 <Mail className="w-4 h-4 text-gray-500 flex-shrink-0" />
                                 <span className="truncate">{household.email_address}</span>
                               </div>
@@ -273,7 +273,7 @@ const Dashboard = () => {
                         <div className="col-span-3">
                           <div className="space-y-1">
                             {(household.house_no || household.street_name) && (
-                              <div className="text-gray-300 text-sm">
+                              <div className="text-[rgb(var(--text))] text-sm">
                                 {household.house_no} {[household.street_name, household.barangay].filter(Boolean).join(', ')}
                               </div>
                             )}
@@ -291,7 +291,7 @@ const Dashboard = () => {
                         {/* Family Members Column */}
                         <div className="col-span-2">
                           <div className="flex items-center space-x-2">
-                            <div className={`px-3 py-1 rounded-full text-xs font-medium ${household.family_count > 0 ? 'bg-cyan-500/10 text-cyan-300' : 'bg-gray-700/50 text-gray-400'}`}>
+                            <div className={`px-3 py-1 rounded-full text-xs font-medium ${household.family_count > 0 ? 'bg-cyan-500/10 text-cyan-300' : 'bg-[rgb(var(--muted))]/50 text-[rgb(var(--text-muted))]'}`}>
                               {household.family_count || 0} member{household.family_count !== 1 ? 's' : ''}
                             </div>
                             {household.family_count > 0 && (
@@ -321,7 +321,7 @@ const Dashboard = () => {
                         <div className="col-span-1 text-right">
                           <Link 
                             to={`/household/${household.id}`}
-                            className="inline-flex items-center px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm font-medium rounded-lg transition-colors duration-200"
+                            className="inline-flex items-center px-3 py-1.5 bg-[rgb(var(--muted))] hover:bg-gray-600 text-[rgb(var(--text))] text-sm font-medium rounded-lg transition-colors duration-200"
                           >
                             Edit
                           </Link>
@@ -332,7 +332,7 @@ const Dashboard = () => {
                       {expandedHouseholdId === household.id && (
                         <div className="bg-gray-900/50 border-t border-gray-700 p-6">
                           <div className="flex items-center justify-between mb-4">
-                            <h4 className="text-gray-300 font-medium text-lg flex items-center space-x-2">
+                            <h4 className="text-[rgb(var(--text))] font-medium text-lg flex items-center space-x-2">
                               <Users className="w-5 h-5" />
                               <span>Family Members</span>
                             </h4>
@@ -344,15 +344,15 @@ const Dashboard = () => {
                           {expandedHouseholdDetails[household.id]?.familyMembers?.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                               {expandedHouseholdDetails[household.id].familyMembers.map((member, index) => (
-                                <div key={member.id || index} className="bg-gray-800/30 rounded-lg p-4 border border-gray-700">
+                                <div key={member.id || index} className="bg-[rgb(var(--bg))] rounded-lg p-4 border border-gray-700">
                                   <div className="flex items-center space-x-3 mb-3">
                                     <div className="w-8 h-8 bg-linear-to-br from-gray-700 to-gray-800 rounded-full flex items-center justify-center border border-gray-600">
-                                      <span className="text-gray-300 text-xs font-bold">
+                                      <span className="text-[rgb(var(--text))] text-xs font-bold">
                                         {member.first_name?.charAt(0) || ''}{member.last_name?.charAt(0) || ''}
                                       </span>
                                     </div>
                                     <div>
-                                      <div className="text-gray-300 font-medium">
+                                      <div className="text-[rgb(var(--text))] font-medium">
                                         {member.first_name} {member.last_name}
                                       </div>
                                       <div className="text-gray-500 text-xs capitalize">
@@ -361,7 +361,7 @@ const Dashboard = () => {
                                     </div>
                                   </div>
                                   {member.age && (
-                                    <div className="text-sm text-gray-400">
+                                    <div className="text-sm text-[rgb(var(--text-muted))]">
                                       Age: {member.age}
                                     </div>
                                   )}
@@ -381,17 +381,17 @@ const Dashboard = () => {
                 </div>
 
                 {/* List Footer */}
-                <div className="p-4 border-t border-gray-700 bg-gray-800/50 text-gray-500 text-sm">
+                <div className="p-4 border-t border-gray-700 bg-[rgb(var(--bg))] text-gray-500 text-sm">
                   Showing {households.length} household{households.length !== 1 ? 's' : ''}
                   {searchTerm && ` matching "${searchTerm}"`}
                 </div>
               </div>
             ) : (
               <div className="text-center py-20">
-                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gray-800/50 flex items-center justify-center border border-gray-700">
+                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-[rgb(var(--bg))] flex items-center justify-center border border-gray-700">
                   <FileText className="w-12 h-12 text-gray-500" />
                 </div>
-                <h3 className="text-2xl font-semibold text-gray-300 mb-2">
+                <h3 className="text-2xl font-semibold text-[rgb(var(--text))] mb-2">
                   {searchTerm ? 'No matching households found' : 'No households in database'}
                 </h3>
                 <p className="text-gray-500 mb-8 max-w-md mx-auto">
@@ -403,7 +403,7 @@ const Dashboard = () => {
                 {!searchTerm && (
                   <Link
                     to="/data-entry"
-                    className="inline-flex items-center px-8 py-3.5 bg-linear-to-r from-cyan-600 to-blue-700 text-white font-semibold rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/20 border border-cyan-500/30"
+                    className="inline-flex items-center px-8 py-3.5 bg-linear-to-r from-cyan-600 to-blue-700 text-[rgb(var(--blight))] font-semibold rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-cyan-500/20 border border-cyan-500/30"
                   >
                     <Plus className="w-5 h-5 mr-3" />
                     Add First Household
@@ -413,11 +413,11 @@ const Dashboard = () => {
             )}
 
             {/* Quick Actions */}
-            <div className="mt-8 p-6 bg-linear-to-r from-gray-800/50 to-gray-900/50 rounded-xl border border-gray-700">
+            <div className="mt-8 p-6 bg-linear-to-r from-[rgb(var(--card))] to-[rgb(var(--bg))] rounded-xl border border-gray-700">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-xl font-bold text-gray-300 mb-2">Quick Actions</h3>
-                  <p className="text-gray-400 text-sm">
+                  <h3 className="text-xl font-bold text-[rgb(var(--text))] mb-2">Quick Actions</h3>
+                  <p className="text-[rgb(var(--text-muted))] text-sm">
                     {households.length > 0 
                       ? `Manage ${households.length} household records in your database` 
                       : 'Start building your census database'
@@ -429,7 +429,7 @@ const Dashboard = () => {
                   <button
                     onClick={loadDashboardData}
                     disabled={loading}
-                    className="px-5 py-2.5 bg-gray-700 hover:bg-gray-600 text-gray-300 font-medium rounded-lg transition-colors duration-300 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                    className="px-5 py-2.5 bg-[rgb(var(--muted))] hover:bg-gray-600 text-[rgb(var(--text))] font-medium rounded-lg transition-colors duration-300 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                   >
                     <RefreshCw className="w-4 h-4" />
                     <span>Refresh</span>
@@ -437,7 +437,7 @@ const Dashboard = () => {
                   
                   <Link
                     to="/data-entry"
-                    className="px-6 py-3 bg-linear-to-r from-cyan-600 to-blue-700 text-white font-semibold rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20 border border-cyan-500/30 flex items-center space-x-2 text-sm"
+                    className="px-6 py-3 bg-linear-to-r from-cyan-600 to-blue-700 text-[rgb(var(--blight))] font-semibold rounded-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20 border border-cyan-500/30 flex items-center space-x-2 text-sm"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Add New Record</span>
@@ -474,27 +474,27 @@ const Dashboard = () => {
       </div>
       
       {/* Status Bar */}
-      <div className="h-8 bg-gray-800 border-t border-gray-700 flex items-center justify-between px-4">
+      <div className="h-8 bg-[rgb(var(--bg))] border-t border-gray-700 flex items-center justify-between px-4">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            <span className="text-gray-400 text-sm">
+            <span className="text-[rgb(var(--text-muted))] text-sm">
               Database: {loading ? 'Loading...' : 'Ready'} • {households.length} records
             </span>
           </div>
           <span className="text-gray-600">|</span>
-          <span className="text-gray-400 text-sm flex items-center space-x-2">
+          <span className="text-[rgb(var(--text-muted))] text-sm flex items-center space-x-2">
             <FileArchive className="w-3 h-3" />
             <span>Local Storage: Active</span>
           </span>
         </div>
         <div className="flex items-center space-x-4">
-          <span className="text-gray-400 text-sm flex items-center space-x-2">
+          <span className="text-[rgb(var(--text-muted))] text-sm flex items-center space-x-2">
             <Globe className="w-3 h-3" />
             <span>Desktop Mode</span>
           </span>
           <span className="text-gray-600">|</span>
-          <span className="text-gray-400 text-sm">Windows x64</span>
+          <span className="text-[rgb(var(--text-muted))] text-sm">Windows x64</span>
         </div>
       </div>
     </div>

@@ -40,7 +40,7 @@ const LandingPage = () => {
 
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col items-center justify-center p-8 overflow-hidden">
+    <div className="min-h-screen bg-linear-to-br from-[rgb(var(--bg))] via-[rgb(var(--card))] to-[rgb(var(--bg))] flex flex-col items-center justify-center p-8 overflow-hidden">
       {/* Animated Waves */}
       <div className="relative w-96 h-96 flex items-center justify-center">
         {waves.map((wave) => (
@@ -99,7 +99,7 @@ const LandingPage = () => {
       {/* Get Started Button - Now using Link */}
       <Link
         to="/dashboard"
-        className="mt-4 px-12 py-4 bg-linear-to-r from-cyan-600 to-blue-700 text-white text-xl font-semibold rounded-xl hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/30 border-2 border-cyan-400/30 inline-flex items-center space-x-3"
+        className="mt-4 px-12 py-4 bg-linear-to-r from-cyan-600 to-blue-700 text-[rgb(var(--blight))] text-xl font-semibold rounded-xl hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/30 border-2 border-cyan-400/30 inline-flex items-center space-x-3"
       >
         <span>Get Started</span>
         <svg className="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">

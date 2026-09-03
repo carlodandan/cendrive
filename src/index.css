@@ -1,0 +1,347 @@
+@import "tailwindcss";
+
+/* Theme is driven by a class on <html>, not by prefers-color-scheme alone: the
+   user can override the OS choice in Settings. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------------------
+   Palette. Every foreground/background pair below was checked against its own
+   surface: body text >= 12:1, secondary text >= 6.9:1, accents >= 5:1 in light
+   and >= 9:1 in dark. Both themes are first-class, not inverted from each other.
+   --------------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  --canvas: #ffffff;
+  --surface: #f9fafb;
+  --surface-2: #f3f4f6;
+  --line: #e5e7eb;
+  --line-strong: #d1d5db;
+
+  --body: #111827;
+  --dim: #4b5563;
+  --faint: #6b7280;
+
+  --accent: #0e7490;
+  --accent-soft: #ecfeff;
+  --mark: #b45309;
+
+  --ok: #047857;
+  --warn: #b45309;
+  --bad: #b91c1c;
+  --info: #1d4ed8;
+  --ok-soft: #ecfdf5;
+  --bad-soft: #fef2f2;
+
+  --focus: #0e7490;
+  --overlay: rgb(17 24 39 / 0.45);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --canvas: #111827;
+  --surface: #1f2937;
+  --surface-2: #374151;
+  --line: #374151;
+  --line-strong: #4b5563;
+
+  --body: #f3f4f6;
+  --dim: #d1d5db;
+  --faint: #9ca3af;
+
+  --accent: #22d3ee;
+  --accent-soft: #164e63;
+  --mark: #fcd34d;
+
+  --ok: #34d399;
+  --warn: #fbbf24;
+  --bad: #f87171;
+  --info: #60a5fa;
+  --ok-soft: #064e3b;
+  --bad-soft: #450a0a;
+
+  --focus: #22d3ee;
+  --overlay: rgb(3 7 18 / 0.6);
+}
+
+/* Brand gradient is intentionally identical in both themes: white on either
+   stop clears 5.3:1, so one token stays accessible everywhere. The close-button
+   hover follows the Windows convention rather than the palette. */
+:root,
+.dark {
+  --brand-from: #0e7490;
+  --brand-to: #1d4ed8;
+  --on-brand: #ffffff;
+  --close-hover: #c42b1c;
+}
+
+@theme inline {
+  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", monospace;
+
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --color-body: var(--body);
+  --color-dim: var(--dim);
+  --color-faint: var(--faint);
+
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-mark: var(--mark);
+
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+  --color-info: var(--info);
+
+  --color-brand-from: var(--brand-from);
+  --color-brand-to: var(--brand-to);
+  --color-on-brand: var(--on-brand);
+  --color-close-hover: var(--close-hover);
+  --color-focus: var(--focus);
+
+  --radius-card: 0.5rem;
+}
+
+/* Long identifiers, emails and file paths reflow instead of forcing a
+   horizontal scrollbar. */
+@utility break-anywhere {
+  overflow-wrap: anywhere;
+}
+
+/* Chrome (title bar, sidebar, table headers) is not selectable; record data is,
+   because users copy values out of it. */
+@utility no-select {
+  user-select: none;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  html {
+    /* Themed rather than hardcoded, so the scrollbar tracks light mode too. */
+    scrollbar-color: var(--line-strong) transparent;
+    scrollbar-width: thin;
+  }
+
+  body {
+    @apply bg-canvas text-body font-sans antialiased;
+    font-size: 1rem;
+    line-height: 1.5;
+    overscroll-behavior: none;
+  }
+
+  /* One visible focus treatment for every control. Outline is used instead of a
+     ring so it is never clipped by an overflow container. */
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-body font-semibold tracking-tight;
+    text-wrap: balance;
+  }
+
+  [data-tauri-drag-region] {
+    cursor: default;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  /* Settings can force the same behaviour regardless of the OS setting. */
+  .no-motion *,
+  .no-motion *::before,
+  .no-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-surface border border-line rounded-card;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 h-9 px-3 rounded-md text-sm font-medium
+      whitespace-nowrap transition-colors duration-150
+      disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  /* Variants are composed in markup — `class="btn btn-primary"` — because v4
+     `@apply` only takes utilities, not other component classes. */
+  .btn-primary {
+    @apply bg-linear-to-r from-brand-from to-brand-to text-on-brand
+      hover:brightness-110 active:brightness-95;
+  }
+
+  .btn-secondary {
+    @apply bg-surface-2 text-body border border-line hover:border-line-strong hover:bg-line;
+  }
+
+  .btn-ghost {
+    @apply text-dim hover:bg-surface-2 hover:text-body;
+  }
+
+  /* Outlined rather than filled: a filled red cannot hold 4.5:1 with white text
+     in both themes, an outlined one can. */
+  .btn-danger {
+    @apply border border-bad text-bad hover:bg-bad-soft;
+  }
+
+  .btn-sm {
+    @apply h-8 px-2.5 text-xs;
+  }
+
+  .btn-icon {
+    @apply w-9 px-0;
+  }
+
+  .btn-icon.btn-sm {
+    @apply w-8;
+  }
+
+  .label {
+    @apply block text-xs font-medium text-dim mb-1.5;
+  }
+
+  .input {
+    @apply h-9 w-full rounded-md bg-canvas border border-line-strong px-3 text-sm text-body
+      placeholder:text-faint transition-colors
+      hover:border-faint
+      disabled:bg-surface-2 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  textarea.input {
+    @apply h-auto py-2 leading-relaxed;
+  }
+
+  .input-invalid {
+    @apply border-bad;
+  }
+
+  .help {
+    @apply mt-1.5 text-xs text-faint;
+  }
+
+  .error-text {
+    @apply mt-1.5 flex items-start gap-1.5 text-xs text-bad;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-medium;
+  }
+
+  .chip-neutral {
+    @apply border-line-strong bg-surface-2 text-dim;
+  }
+
+  .chip-ok {
+    @apply border-ok/40 bg-ok-soft text-ok;
+  }
+
+  .chip-accent {
+    @apply border-accent/40 bg-accent-soft text-accent;
+  }
+
+  .link {
+    @apply text-accent underline decoration-1 underline-offset-2 hover:decoration-2 break-anywhere;
+  }
+
+  /* "Cen" stays amber, "Drive" keeps the cyan-to-blue gradient. Both stops are
+     token-based so the wordmark stays legible in light mode. */
+  .wordmark {
+    @apply bg-linear-to-r from-accent to-info bg-clip-text text-transparent;
+  }
+
+  .table-wrap {
+    @apply overflow-x-auto rounded-card border border-line;
+  }
+
+  table.data {
+    @apply w-full border-collapse text-sm;
+  }
+
+  table.data thead th {
+    @apply sticky top-0 z-10 bg-surface-2 px-3 py-2 text-left text-xs font-semibold
+      text-dim border-b border-line no-select;
+  }
+
+  table.data tbody td {
+    @apply px-3 py-2.5 align-middle border-b border-line;
+  }
+
+  table.data tbody tr:last-child td {
+    @apply border-b-0;
+  }
+
+  table.data tbody tr:hover td {
+    @apply bg-surface-2/60;
+  }
+
+  /* Compact tables setting. */
+  .dense table.data tbody td {
+    @apply py-1.5;
+  }
+
+  .titlebar-btn {
+    @apply inline-flex h-9 w-11 items-center justify-center text-dim transition-colors
+      hover:bg-surface-2 hover:text-body;
+  }
+
+  .titlebar-btn-close {
+    @apply hover:bg-close-hover hover:text-white;
+  }
+
+  .skip-link {
+    @apply absolute left-3 z-50 rounded-md border border-line bg-surface px-3 py-2 text-sm;
+    top: -3rem;
+  }
+
+  .skip-link:focus {
+    top: 0.75rem;
+  }
+
+  /* Enters from below: the direction says "new item", not decoration. */
+  .toast-item {
+    animation: toast-in 160ms ease-out both;
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+

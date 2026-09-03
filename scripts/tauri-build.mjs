@@ -1,0 +1,184 @@
+// Wraps `tauri build` so one command covers all three signing situations:
+//
+//   CERTIFICATE_THUMBPRINT  certificate already in the Windows certificate store
+//   CERTIFICATE_PASSWORD    certificate as a .pfx file on disk
+//   neither                 unsigned installer
+//
+// The mode is decided here rather than in tauri.conf.json because that file is
+// committed: a thumbprint or a signing command baked into it would make every
+// clone of the repository try to sign, and fail.
+//
+// Run through `npm run build`, which loads `.env` first.
+
+import { spawn } from "node:child_process";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import path from "node:path";
+import process from "node:process";
+
+const ROOT = path.resolve(import.meta.dirname, "..");
+const SIGN_SCRIPT = path.join(ROOT, "scripts", "sign.cmd");
+const TAURI_CONF = path.join(ROOT, "src-tauri", "tauri.conf.json");
+const DEFAULT_CERTIFICATE = path.join("cert", "cendrive.pfx");
+
+/** Paths are quoted in output, so make them readable while still unambiguous. */
+function rel(target) {
+  return path.relative(ROOT, target).replaceAll("\\", "/");
+}
+
+function fail(message) {
+  console.error(`build: ${message}`);
+  process.exit(1);
+}
+
+/** Trimmed value, or "" when the variable is unset or blank. */
+function env(name) {
+  return (process.env[name] ?? "").trim();
+}
+
+/** Newest first, so the highest installed SDK wins. */
+function byVersionDescending(a, b) {
+  const left = a.split(".").map(Number);
+  const right = b.split(".").map(Number);
+  for (let index = 0; index < Math.max(left.length, right.length); index += 1) {
+    const difference = (right[index] ?? 0) - (left[index] ?? 0);
+    if (difference !== 0) return difference;
+  }
+  return 0;
+}
+
+/**
+ * `signtool.exe` ships with the Windows SDK and is not on PATH, so it has to be
+ * found. Tauri does its own lookup for the built-in signing path; this one is
+ * only needed for the custom sign command.
+ */
+function findSigntool() {
+  const architectures = process.arch === "arm64" ? ["arm64", "x64", "x86"] : ["x64", "x86"];
+  const roots = [process.env["ProgramFiles(x86)"], process.env.ProgramFiles]
+    .filter(Boolean)
+    .map((base) => path.join(base, "Windows Kits", "10", "bin"));
+
+  for (const root of roots) {
+    if (!existsSync(root)) continue;
+    const versions = readdirSync(root, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory() && /^\d+(\.\d+)*$/.test(entry.name))
+      .map((entry) => entry.name)
+      .sort(byVersionDescending);
+
+    // "" covers the older layout, where the architecture sits directly in bin/.
+    for (const version of [...versions, ""]) {
+      for (const architecture of architectures) {
+        const candidate = path.join(root, version, architecture, "signtool.exe");
+        if (existsSync(candidate)) return candidate;
+      }
+    }
+  }
+  return null;
+}
+
+/** One source of truth for the timestamp server: the committed Tauri config. */
+function timestampUrl() {
+  try {
+    const conf = JSON.parse(readFileSync(TAURI_CONF, "utf8"));
+    return conf.bundle?.windows?.timestampUrl ?? "";
+  } catch {
+    return "";
+  }
+}
+
+/**
+ * Returns the config to merge over tauri.conf.json plus any extra environment
+ * the sign command needs.
+ */
+function resolveSigning() {
+  // Thumbprints are usually copied out of certmgr, which shows them spaced.
+  const thumbprint = env("CERTIFICATE_THUMBPRINT").replaceAll(/[\s:]/g, "");
+  const password = env("CERTIFICATE_PASSWORD");
+
+  if (thumbprint) {
+    if (!/^[0-9a-fA-F]{40}$/.test(thumbprint)) {
+      fail(
+        "CERTIFICATE_THUMBPRINT must be the certificate's 40-character SHA1 hash. " +
+          "Copy it from certmgr, or unset it to build unsigned.",
+      );
+    }
+    return {
+      description: `signing with the certificate store entry ending ${thumbprint.slice(-8)}`,
+      config: { bundle: { windows: { certificateThumbprint: thumbprint } } },
+      extraEnv: {},
+    };
+  }
+
+  if (password) {
+    if (process.platform !== "win32") {
+      fail("CERTIFICATE_PASSWORD signing uses signtool.exe, which only runs on Windows.");
+    }
+    const certificate = path.resolve(ROOT, env("CERTIFICATE_PATH") || DEFAULT_CERTIFICATE);
+    if (!existsSync(certificate)) {
+      fail(
+        `CERTIFICATE_PASSWORD is set but there is no certificate at "${rel(certificate)}". ` +
+          "Point CERTIFICATE_PATH at your .pfx, or unset the password to build unsigned.",
+      );
+    }
+    const signtool = env("SIGNTOOL_PATH") || findSigntool();
+    if (!signtool) {
+      fail(
+        "signtool.exe was not found. Install the Windows SDK signing tools, " +
+          "or set SIGNTOOL_PATH to its full path.",
+      );
+    }
+    return {
+      description: `signing with "${rel(certificate)}"`,
+      // A wrapper script, not signtool directly: Tauri echoes the sign command it
+      // runs, and `signtool /p <password>` in there would put the password in the
+      // build log and in every process listing on the machine. The wrapper reads
+      // it from its inherited environment instead.
+      config: {
+        bundle: {
+          windows: { signCommand: { cmd: "cmd", args: ["/c", SIGN_SCRIPT, "%1"] } },
+        },
+      },
+      extraEnv: {
+        CERTIFICATE_PATH: certificate,
+        SIGNTOOL_PATH: signtool,
+        TIMESTAMP_URL: env("TIMESTAMP_URL") || timestampUrl(),
+      },
+    };
+  }
+
+  return { description: "building unsigned", config: {}, extraEnv: {} };
+}
+
+const signing = resolveSigning();
+const args = ["build", ...process.argv.slice(2)];
+if (Object.keys(signing.config).length > 0) {
+  args.push("--config", JSON.stringify(signing.config));
+}
+
+console.log(`build: ${signing.description}.`);
+if (Object.keys(signing.config).length === 0) {
+  console.log(
+    "build: set CERTIFICATE_THUMBPRINT or CERTIFICATE_PASSWORD in .env to sign the installer.",
+  );
+}
+
+// The CLI's own bin script, run through this Node: no shell, so nothing can
+// mangle the JSON argument, and no dependency on npx being on PATH.
+let cli;
+try {
+  cli = createRequire(import.meta.url).resolve("@tauri-apps/cli/tauri.js");
+} catch {
+  fail("@tauri-apps/cli is not installed. Run `npm install` first.");
+}
+
+const child = spawn(process.execPath, [cli, ...args], {
+  cwd: ROOT,
+  stdio: "inherit",
+  env: { ...process.env, ...signing.extraEnv },
+});
+
+child.on("error", (error) => fail(`could not start the Tauri CLI: ${error.message}`));
+child.on("exit", (code, signal) => {
+  // A signalled child has no exit code; report it as a failure rather than as 0.
+  process.exit(signal ? 1 : (code ?? 1));
+});

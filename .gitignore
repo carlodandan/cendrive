@@ -89,10 +89,11 @@ typings/
 .webpack/
 
 # Vite
-.vite/
+dist/
 
-# Electron-Forge
-out/
+# Rust / Tauri (target/ is the build cache, gen/schemas/ is regenerated per build)
+src-tauri/target/
+src-tauri/gen/schemas/
 
 # Cert
 cert/cendrive.pfx
@@ -101,3 +102,6 @@ cert/cendrive.pfx
 backup-*
 *.db
 *.sqlite
+
+# build output
+dist/

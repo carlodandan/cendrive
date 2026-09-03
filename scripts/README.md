@@ -6,6 +6,9 @@ environment: `CERTIFICATE_THUMBPRINT` signs from the Windows certificate store,
 `CERTIFICATE_PASSWORD` signs with a `.pfx`, and neither builds unsigned. See
 `.env.sample`.
 
+The release workflow runs it too, through `tauri-action`'s `tauriScript`, so a
+CI build signs the same way a local one does.
+
 ## `sign.cmd`
 Called by `tauri-build.mjs` once per artifact when signing with a `.pfx`. Not
 meant to be run by hand.

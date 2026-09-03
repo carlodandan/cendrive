@@ -58,5 +58,23 @@ out of the build log.
 
 `.env` and `cert/cendrive.pfx` are both gitignored. Leave them that way.
 
+## Releases
+A push to `prod` runs `.github/workflows/release.yml`, which builds on Windows
+and publishes `v<version>` with the bundled installers attached. The tag comes
+from the app version, so cutting a release means bumping it in
+`src-tauri/tauri.conf.json`, `package.json` and `src-tauri/Cargo.toml`.
+
+CI signs with two repository secrets, and without them the release still goes
+out, unsigned:
+
+| Secret | Value |
+| --- | --- |
+| `CERTIFICATE_BASE64` | The `.pfx`, base64 encoded. |
+| `CERTIFICATE_PASSWORD` | The password protecting it. |
+
+```powershell
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("cert\cendrive.pfx")) | Set-Clipboard
+```
+
 # License
 [MIT](LICENSE)

@@ -150,7 +150,14 @@ function resolveSigning() {
 }
 
 const signing = resolveSigning();
-const args = ["build", ...process.argv.slice(2)];
+
+// The release workflow runs this through tauri-action, which appends its own
+// `build` to the command it is given, so the subcommand can arrive from either
+// side. Keep exactly one.
+const passthrough = process.argv.slice(2);
+if (passthrough[0] === "build") passthrough.shift();
+
+const args = ["build", ...passthrough];
 if (Object.keys(signing.config).length > 0) {
   args.push("--config", JSON.stringify(signing.config));
 }

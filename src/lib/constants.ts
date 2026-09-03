@@ -12,6 +12,7 @@ export const RELATIONSHIPS = [
   "uncle",
   "aunt",
   "cousin",
+  "spouse"
   "other",
 ] as const;
 

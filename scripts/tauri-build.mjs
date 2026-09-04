@@ -154,18 +154,19 @@ function resolveSigning() {
 }
 
 /**
- * `createUpdaterArtifacts` lives here rather than in tauri.conf.json because the
- * bundler refuses to build when it is set with no signing key in the
- * environment: committing it would break `pnpm build` for anyone without the
- * key, which is everyone but the release workflow.
+ * The updater key in `signkey/`, not the certificate above: this one signs the
+ * manifest an installed copy checks. `bundle.createUpdaterArtifacts` is on in
+ * tauri.conf.json, so every build needs it, and the bundler only says so once
+ * the Rust build has finished — a long walk for a missing variable. Check up
+ * front, and pass the setting along so the command says what the config says.
  */
 function resolveUpdater() {
   if (!env("TAURI_SIGNING_PRIVATE_KEY")) {
-    return {
-      description:
-        "no updater artifacts; set TAURI_SIGNING_PRIVATE_KEY to produce them",
-      config: {},
-    };
+    fail(
+      "TAURI_SIGNING_PRIVATE_KEY is not set and tauri.conf.json asks for " +
+        "updater artifacts. Set it in .env — see .env.sample — or turn off " +
+        "bundle.createUpdaterArtifacts to build without them.",
+    );
   }
   return {
     description: "producing signed updater artifacts",

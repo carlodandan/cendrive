@@ -95,8 +95,8 @@ dist/
 src-tauri/target/
 src-tauri/gen/schemas/
 
-# Cert: the .pfx Windows checks, the updater key latest.json is signed with, and
-# anything else that ends up here. Only the samples stay tracked.
+# Cert: the code signing certificate Windows checks before it will run the
+# installer. Only the samples stay tracked.
 cert/*
 !cert/*.sample
 
@@ -111,6 +111,6 @@ dist/
 # Icons
 src-tauri/icons/
 
-# Sign Key
+# Sign Key: the updater key pair latest.json is signed with, unrelated to cert/
 signkey/cendrive.key
 signkey/cendrive.key.pub

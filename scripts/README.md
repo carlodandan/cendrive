@@ -6,11 +6,11 @@ environment: `CERTIFICATE_THUMBPRINT` signs from the Windows certificate store,
 `CERTIFICATE_PASSWORD` signs with a `.pfx`, and neither builds unsigned. See
 `.env.sample`.
 
-`TAURI_SIGNING_PRIVATE_KEY` is a separate decision it makes the same way: with a
-key in the environment it turns on `createUpdaterArtifacts` so the build emits
-`latest.json` and the `.sig` files an installed copy needs, and without one it
-leaves the setting off. That is why the setting is not in
-`src-tauri/tauri.conf.json`, where it would make every keyless build fail.
+`TAURI_SIGNING_PRIVATE_KEY` is the updater key from `signkey/`, a separate thing
+from the certificate: it signs the manifest an installed copy checks, not the
+installer Windows checks. `src-tauri/tauri.conf.json` asks for updater artifacts
+on every build, so the wrapper stops early when that variable is missing rather
+than let the bundler fail after the Rust build.
 
 The release workflow runs it too, through `tauri-action`'s `tauriScript`, so a
 CI build signs the same way a local one does.

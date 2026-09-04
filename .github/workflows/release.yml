@@ -96,13 +96,13 @@ jobs:
       # when the .pfx was really written, so a half-configured repository
       # downgrades instead of failing.
       #
-      # TAURI_SIGNING_PRIVATE_KEY is the other, unrelated key: it signs the
-      # updater manifest an installed copy checks, not the installer Windows
-      # checks. Without it the wrapper leaves createUpdaterArtifacts off and the
-      # release goes out with installers but no latest.json, so installed copies
-      # find nothing to update to. The password variable is passed even when it
-      # is empty, because the signer prompts for it interactively otherwise and
-      # a prompt in CI is a hang.
+      # TAURI_SIGNING_PRIVATE_KEY is the other, unrelated key — the updater one
+      # from signkey/. It signs the manifest an installed copy checks, not the
+      # installer Windows checks. tauri.conf.json asks for updater artifacts on
+      # every build, so this secret is not optional: without it the bundler stops
+      # rather than publish a release nothing can update to. The password
+      # variable is passed even when it is empty, because the signer prompts for
+      # it interactively otherwise and a prompt in CI is a hang.
       #
       # __VERSION__ is the app version, so a new release means bumping it — in
       # src-tauri/tauri.conf.json, package.json and src-tauri/Cargo.toml, which

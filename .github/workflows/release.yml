@@ -35,12 +35,11 @@ jobs:
       # is cached against pnpm-lock.yaml, and the install that follows is a
       # --frozen-lockfile one: a lockfile that disagrees with package.json fails
       # here rather than resolving something no one has ever run.
-      - name: Setup pnpm and Node
-        uses: pnpm/setup@v2
+      - uses: pnpm/setup@v1
         with:
-          runtime: node@24
+          version: 11
+          runtime: node@22
           cache: true
-          require-lockfile: true
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable

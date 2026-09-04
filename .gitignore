@@ -95,8 +95,10 @@ dist/
 src-tauri/target/
 src-tauri/gen/schemas/
 
-# Cert
-cert/cendrive.pfx
+# Cert: the .pfx Windows checks, the updater key latest.json is signed with, and
+# anything else that ends up here. Only the samples stay tracked.
+cert/*
+!cert/*.sample
 
 # Backup
 backup-*
@@ -105,3 +107,10 @@ backup-*
 
 # build output
 dist/
+
+# Icons
+src-tauri/icons/
+
+# Sign Key
+signkey/cendrive.key
+signkey/cendrive.key.pub

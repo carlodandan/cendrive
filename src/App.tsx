@@ -1,5 +1,6 @@
 import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 
+import { UpdateWatcher } from "./components/UpdateWatcher";
 import { Dashboard } from "./pages/Dashboard";
 import { DataEntry } from "./pages/DataEntry";
 import { HouseholdEdit } from "./pages/HouseholdEdit";
@@ -18,6 +19,8 @@ export function App() {
       <a href="#main" className="skip-link">
         Skip to main content
       </a>
+      {/* Renders nothing; it only announces a waiting update, once per run. */}
+      <UpdateWatcher />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/dashboard" element={<Dashboard />} />

@@ -75,6 +75,15 @@ pub fn run() {
         .setup(|app| {
             let handle = app.handle().clone();
 
+            // The updater downloads the installer and runs it; process supplies
+            // the relaunch afterwards. Both are desktop-only, which is what the
+            // target gate in Cargo.toml says as well.
+            #[cfg(desktop)]
+            {
+                handle.plugin(tauri_plugin_updater::Builder::new().build())?;
+                handle.plugin(tauri_plugin_process::init())?;
+            }
+
             let db_path = handle.path().app_data_dir()?.join("cendrive.db");
             migrate_legacy_database(&handle, &db_path);
             app.manage(Db::new(db_path));

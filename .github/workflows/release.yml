@@ -30,11 +30,16 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v6
 
-      - name: Setup Node
-        uses: actions/setup-node@v5
+      # pnpm/setup installs its own Node, so actions/setup-node is not needed.
+      # The pnpm version comes from `packageManager` in package.json, the store
+      # is cached against pnpm-lock.yaml, and the install that follows is a
+      # --frozen-lockfile one: a lockfile that disagrees with package.json fails
+      # here rather than resolving something no one has ever run.
+      - uses: pnpm/setup@v1
         with:
-          node-version: 24
-          cache: npm
+          version: 11
+          runtime: node@22
+          cache: true
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
@@ -53,14 +58,11 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('src-tauri/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
 
-      - name: Install Dependencies
-        run: npm ci
-
-      # src-tauri/icons/ is committed, so this is belt and braces: it keeps the
-      # bundled icons in step with icons/cendrive_512x512.png when the artwork
-      # changes and nobody remembers to regenerate.
+      # src-tauri/icons/ is gitignored, so nothing guarantees a checkout has it,
+      # and the icon compiled into the executable and every installer icon come
+      # from there. Generating them costs a second.
       - name: Run Tauri Icon Command
-        run: npm run icons
+        run: pnpm icons
 
       # cert/cendrive.pfx is gitignored, so CI takes it from two secrets:
       #
@@ -88,14 +90,19 @@ jobs:
           'signed=true' >> $env:GITHUB_OUTPUT
 
       # tauriScript routes the build through scripts/tauri-build.mjs, the same
-      # wrapper `npm run build` uses, so CI signs the way a local build does:
+      # wrapper `pnpm build` uses, so CI signs the way a local build does:
       # CERTIFICATE_PASSWORD present signs cert/cendrive.pfx through
       # scripts/sign.cmd, absent builds unsigned. The password is passed on only
       # when the .pfx was really written, so a half-configured repository
       # downgrades instead of failing.
       #
-      # No TAURI_SIGNING_PRIVATE_KEY: those keys sign updater manifests, and
-      # this app ships no updater. The certificate above is the Authenticode one.
+      # TAURI_SIGNING_PRIVATE_KEY is the other, unrelated key — the updater one
+      # from signkey/. It signs the manifest an installed copy checks, not the
+      # installer Windows checks. tauri.conf.json asks for updater artifacts on
+      # every build, so this secret is not optional: without it the bundler stops
+      # rather than publish a release nothing can update to. The password
+      # variable is passed even when it is empty, because the signer prompts for
+      # it interactively otherwise and a prompt in CI is a hang.
       #
       # __VERSION__ is the app version, so a new release means bumping it — in
       # src-tauri/tauri.conf.json, package.json and src-tauri/Cargo.toml, which
@@ -105,6 +112,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CERTIFICATE_PASSWORD: ${{ steps.certificate.outputs.signed == 'true' && secrets.CERTIFICATE_PASSWORD || '' }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tauriScript: node scripts/tauri-build.mjs
           tagName: v__VERSION__

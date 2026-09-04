@@ -10,6 +10,7 @@ import {
   HardDriveDownload,
   Info,
   Monitor,
+  RefreshCw,
   RotateCcw,
   Table2,
 } from "lucide-react";
@@ -18,6 +19,7 @@ import type { ReactNode } from "react";
 
 import { AppShell } from "../components/AppShell";
 import { StatusDot } from "../components/StatusBar";
+import { UpdateCheck } from "../components/UpdateCheck";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 import { SelectField } from "../components/ui/Field";
 import { Spinner } from "../components/ui/Spinner";
@@ -44,15 +46,17 @@ function Panel({
   icon: Icon,
   title,
   description,
+  className = "",
   children,
 }: {
   icon: LucideIcon;
   title: string;
   description: string;
+  className?: string;
   children: ReactNode;
 }) {
   return (
-    <section className="card p-5">
+    <section className={`card p-5 ${className}`}>
       <header className="mb-4">
         <h2 className="flex items-center gap-2 text-sm font-semibold">
           <Icon className="size-4 text-accent" aria-hidden="true" />
@@ -407,6 +411,15 @@ export function Settings() {
             <ExternalLink className="size-3.5" aria-hidden="true" />
             Project repository
           </button>
+        </Panel>
+
+        <Panel
+          icon={RefreshCw}
+          title="Updates"
+          description="CenDrive asks its GitHub releases for a newer signed installer; it never sends anything about your data."
+          className="col-span-2"
+        >
+          <UpdateCheck />
         </Panel>
       </div>
 

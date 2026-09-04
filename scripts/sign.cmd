@@ -1,5 +1,5 @@
 @echo off
-rem Signs one file for `npm run build`. Tauri calls this once per artifact — the
+rem Signs one file for `pnpm build`. Tauri calls this once per artifact — the
 rem application executable and then the installer — with the path as %1.
 rem
 rem The password comes from the environment, not from the command line, because

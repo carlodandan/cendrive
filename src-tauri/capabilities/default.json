@@ -19,6 +19,7 @@
     "dialog:allow-save",
     "dialog:allow-open",
     "opener:allow-open-url",
+    "updater:default",
     {
       "identifier": "opener:allow-open-path",
       "allow": [

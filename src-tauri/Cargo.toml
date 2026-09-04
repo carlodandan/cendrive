@@ -1,6 +1,6 @@
 [package]
 name = "cendrive"
-version = "1.0.0"
+version = "1.1.0"
 description = "CenDrive is a desktop application as database management system."
 authors = ["Carlo Dandan <carloddandan.personal@proton.me>"]
 license = "MIT"
@@ -24,6 +24,13 @@ serde_json = "1"
 rusqlite = { version = "0.40", features = ["bundled", "backup"] }
 rust_xlsxwriter = "0.99"
 thiserror = "2"
+
+# Neither plugin has a mobile implementation, so the gate here matches the
+# `#[cfg(desktop)]` registration in lib.rs: the updater fetches and runs the
+# signed installer, and process supplies the relaunch that follows it.
+[target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
+tauri-plugin-updater = "2"
+tauri-plugin-process = "2"
 
 [profile.release]
 codegen-units = 1

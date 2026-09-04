@@ -1,6 +1,6 @@
 [package]
 name = "cendrive"
-version = "1.0.0"
+version = "1.1.0"
 description = "CenDrive is a desktop application as database management system."
 authors = ["Carlo Dandan <carloddandan.personal@proton.me>"]
 license = "MIT"

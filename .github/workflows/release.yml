@@ -1,0 +1,130 @@
+name: Release
+
+# Only the production branch cuts a release: other branches, tags and pull
+# requests are ignored. workflow_dispatch is here so a failed publish can be
+# retried without an empty commit, and the job guard below keeps it to prod
+# whichever branch it is started from.
+on:
+  push:
+    branches: [prod]
+  workflow_dispatch:
+
+# One release at a time, and never cancelled halfway: an interrupted publish can
+# leave a tag behind with no installer attached to it.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  build-windows:
+    if: github.ref_name == 'prod'
+    # The bundle targets are Windows installers and signing goes through
+    # signtool, so the release is built on Windows and nowhere else.
+    runs-on: windows-2025
+
+    # Creating the release and uploading the installer to it.
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      # pnpm/setup installs its own Node, so actions/setup-node is not needed.
+      # The pnpm version comes from `packageManager` in package.json, the store
+      # is cached against pnpm-lock.yaml, and the install that follows is a
+      # --frozen-lockfile one: a lockfile that disagrees with package.json fails
+      # here rather than resolving something no one has ever run.
+      - name: Setup pnpm and Node
+        uses: pnpm/setup@v2
+        with:
+          runtime: node@24
+          cache: true
+          require-lockfile: true
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      # The cargo directories hold the crate sources, src-tauri/target the
+      # compiled dependencies: the difference between a two and a ten minute
+      # build.
+      - name: Cache Rust Build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            src-tauri/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('src-tauri/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      # src-tauri/icons/ is gitignored, so nothing guarantees a checkout has it,
+      # and the icon compiled into the executable and every installer icon come
+      # from there. Generating them costs a second.
+      - name: Run Tauri Icon Command
+        run: pnpm icons
+
+      # cert/cendrive.pfx is gitignored, so CI takes it from two secrets:
+      #
+      #   CERTIFICATE_BASE64    base64 of the .pfx
+      #   CERTIFICATE_PASSWORD  the password protecting it
+      #
+      # Both or neither. With either one missing the installer is unsigned and
+      # the release still goes out: a missing secret should downgrade a release,
+      # not block it.
+      - name: Restore Signing Certificate
+        id: certificate
+        shell: pwsh
+        env:
+          CERTIFICATE_BASE64: ${{ secrets.CERTIFICATE_BASE64 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+        run: |
+          if (-not $env:CERTIFICATE_BASE64 -or -not $env:CERTIFICATE_PASSWORD) {
+            Write-Host 'No signing secrets set: building unsigned.'
+            'signed=false' >> $env:GITHUB_OUTPUT
+            exit 0
+          }
+          New-Item -ItemType Directory -Force -Path cert | Out-Null
+          [IO.File]::WriteAllBytes((Join-Path $PWD 'cert\cendrive.pfx'),
+            [Convert]::FromBase64String($env:CERTIFICATE_BASE64))
+          'signed=true' >> $env:GITHUB_OUTPUT
+
+      # tauriScript routes the build through scripts/tauri-build.mjs, the same
+      # wrapper `pnpm build` uses, so CI signs the way a local build does:
+      # CERTIFICATE_PASSWORD present signs cert/cendrive.pfx through
+      # scripts/sign.cmd, absent builds unsigned. The password is passed on only
+      # when the .pfx was really written, so a half-configured repository
+      # downgrades instead of failing.
+      #
+      # TAURI_SIGNING_PRIVATE_KEY is the other, unrelated key: it signs the
+      # updater manifest an installed copy checks, not the installer Windows
+      # checks. Without it the wrapper leaves createUpdaterArtifacts off and the
+      # release goes out with installers but no latest.json, so installed copies
+      # find nothing to update to. The password variable is passed even when it
+      # is empty, because the signer prompts for it interactively otherwise and
+      # a prompt in CI is a hang.
+      #
+      # __VERSION__ is the app version, so a new release means bumping it — in
+      # src-tauri/tauri.conf.json, package.json and src-tauri/Cargo.toml, which
+      # are meant to agree.
+      - name: Build and Publish
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CERTIFICATE_PASSWORD: ${{ steps.certificate.outputs.signed == 'true' && secrets.CERTIFICATE_PASSWORD || '' }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          tauriScript: node scripts/tauri-build.mjs
+          tagName: v__VERSION__
+          releaseName: 'CenDrive v__VERSION__'
+          releaseDraft: false
+          prerelease: false
+
+      # The runner is thrown away, but the certificate has no business outliving
+      # the step that needed it.
+      - name: Remove Signing Certificate
+        if: always()
+        shell: pwsh
+        run: Remove-Item -Force -ErrorAction SilentlyContinue cert\cendrive.pfx

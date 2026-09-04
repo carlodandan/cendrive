@@ -4,11 +4,15 @@
 //   CERTIFICATE_PASSWORD    certificate as a .pfx file on disk
 //   neither                 unsigned installer
 //
+// and so the updater artifacts are produced only when there is an updater key to
+// sign them with. That key is a different thing from the certificate above: it
+// signs the manifest the running app checks, not the installer Windows checks.
+//
 // The mode is decided here rather than in tauri.conf.json because that file is
 // committed: a thumbprint or a signing command baked into it would make every
 // clone of the repository try to sign, and fail.
 //
-// Run through `npm run build`, which loads `.env` first.
+// Run through `pnpm build`, which loads `.env` first.
 
 import { spawn } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
@@ -149,10 +153,51 @@ function resolveSigning() {
   return { description: "building unsigned", config: {}, extraEnv: {} };
 }
 
+/**
+ * The updater key in `signkey/`, not the certificate above: this one signs the
+ * manifest an installed copy checks. `bundle.createUpdaterArtifacts` is on in
+ * tauri.conf.json, so every build needs it, and the bundler only says so once
+ * the Rust build has finished — a long walk for a missing variable. Check up
+ * front, and pass the setting along so the command says what the config says.
+ */
+function resolveUpdater() {
+  if (!env("TAURI_SIGNING_PRIVATE_KEY")) {
+    fail(
+      "TAURI_SIGNING_PRIVATE_KEY is not set and tauri.conf.json asks for " +
+        "updater artifacts. Set it in .env — see .env.sample — or turn off " +
+        "bundle.createUpdaterArtifacts to build without them.",
+    );
+  }
+  return {
+    description: "producing signed updater artifacts",
+    config: { bundle: { createUpdaterArtifacts: true } },
+  };
+}
+
+/** Both fragments above write into `bundle`, so they are merged, not spread. */
+function merge(target, source) {
+  for (const [key, value] of Object.entries(source)) {
+    target[key] =
+      value && typeof value === "object" && !Array.isArray(value)
+        ? merge(target[key] ?? {}, value)
+        : value;
+  }
+  return target;
+}
+
 const signing = resolveSigning();
-const args = ["build", ...process.argv.slice(2)];
-if (Object.keys(signing.config).length > 0) {
-  args.push("--config", JSON.stringify(signing.config));
+const updater = resolveUpdater();
+const config = merge(merge({}, signing.config), updater.config);
+
+// The release workflow runs this through tauri-action, which appends its own
+// `build` to the command it is given, so the subcommand can arrive from either
+// side. Keep exactly one.
+const passthrough = process.argv.slice(2);
+if (passthrough[0] === "build") passthrough.shift();
+
+const args = ["build", ...passthrough];
+if (Object.keys(config).length > 0) {
+  args.push("--config", JSON.stringify(config));
 }
 
 console.log(`build: ${signing.description}.`);
@@ -161,14 +206,15 @@ if (Object.keys(signing.config).length === 0) {
     "build: set CERTIFICATE_THUMBPRINT or CERTIFICATE_PASSWORD in .env to sign the installer.",
   );
 }
+console.log(`build: ${updater.description}.`);
 
 // The CLI's own bin script, run through this Node: no shell, so nothing can
-// mangle the JSON argument, and no dependency on npx being on PATH.
+// mangle the JSON argument, and no dependency on `pnpm exec` being on PATH.
 let cli;
 try {
   cli = createRequire(import.meta.url).resolve("@tauri-apps/cli/tauri.js");
 } catch {
-  fail("@tauri-apps/cli is not installed. Run `npm install` first.");
+  fail("@tauri-apps/cli is not installed. Run `pnpm install` first.");
 }
 
 const child = spawn(process.execPath, [cli, ...args], {

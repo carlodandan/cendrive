@@ -161,3 +161,55 @@ export function findLocality(
     (locality) => locality.name === localityName,
   );
 }
+export interface RawBarangayFile {
+  slug: string;
+  locations: Record<string, string[]>;
+}
+
+const barangayFiles = import.meta.glob<RawBarangayFile>("../data/lgu/barangay/*.json", {
+  import: "default",
+});
+
+const barangayLoaders = new Map<string, () => Promise<RawBarangayFile>>();
+for (const [path, loader] of Object.entries(barangayFiles)) {
+  const slug = path.split("/").pop()?.replace(/\.json$/, "");
+  if (slug) barangayLoaders.set(slug, loader);
+}
+
+const barangayCache = new Map<string, RawBarangayFile>();
+const barangayInFlight = new Map<string, Promise<RawBarangayFile>>();
+
+export function loadBarangays(slug: string): Promise<RawBarangayFile> {
+  const cached = barangayCache.get(slug);
+  if (cached) return Promise.resolve(cached);
+
+  const pending = barangayInFlight.get(slug);
+  if (pending) return pending;
+
+  const loader = barangayLoaders.get(slug);
+  if (!loader) {
+    return Promise.resolve({ slug, locations: {} });
+  }
+
+  const request = loader()
+    .then((raw) => {
+      barangayCache.set(slug, raw);
+      barangayInFlight.delete(slug);
+      return raw;
+    })
+    .catch((error: unknown) => {
+      barangayInFlight.delete(slug);
+      throw error;
+    });
+
+  barangayInFlight.set(slug, request);
+  return request;
+}
+
+export function slugifyLocality(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/ñ/g, "n")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}

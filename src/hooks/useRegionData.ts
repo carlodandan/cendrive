@@ -7,8 +7,10 @@ import {
   findProvince,
   hasRegionData,
   loadRegion,
+  loadBarangays,
+  slugifyLocality,
 } from "../utils/regionsData";
-import type { Locality, Province, RegionData } from "../utils/regionsData";
+import type { Locality, Province, RegionData, RawBarangayFile } from "../utils/regionsData";
 
 /**
  * Region list ships in the bundle; the per-region LGU file is fetched on demand
@@ -18,6 +20,7 @@ import type { Locality, Province, RegionData } from "../utils/regionsData";
  */
 export function useRegionData() {
   const [data, setData] = useState<RegionData | null>(null);
+  const [barangayData, setBarangayData] = useState<RawBarangayFile | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // Guards against an earlier region resolving after a later one.
@@ -28,6 +31,7 @@ export function useRegionData() {
 
     if (!slug) {
       setData(null);
+      setBarangayData(null);
       setError(null);
       setLoading(false);
       return null;
@@ -35,6 +39,7 @@ export function useRegionData() {
 
     if (!hasRegionData(slug)) {
       setData(null);
+      setBarangayData(null);
       setError("No local government data is bundled for that region.");
       return null;
     }
@@ -42,14 +47,19 @@ export function useRegionData() {
     setLoading(true);
     setError(null);
     try {
-      const region = await loadRegion(slug);
+      const [region, barangays] = await Promise.all([
+        loadRegion(slug),
+        loadBarangays(slug).catch(() => null)
+      ]);
       if (request !== requestRef.current) return null;
       setData(region);
+      setBarangayData(barangays);
       setError(null);
       return region;
     } catch (cause) {
       if (request !== requestRef.current) return null;
       setData(null);
+      setBarangayData(null);
       setError(errorMessage(cause));
       return null;
     } finally {
@@ -84,6 +94,15 @@ export function useRegionData() {
     [data],
   );
 
+  const barangaysFor = useCallback(
+    (localityName: string): string[] => {
+      if (!barangayData || !localityName) return [];
+      const slug = slugifyLocality(localityName);
+      return barangayData.locations?.[slug] ?? [];
+    },
+    [barangayData]
+  );
+
   return {
     regions: REGIONS,
     regionData: data,
@@ -95,5 +114,6 @@ export function useRegionData() {
     selectRegion,
     localitiesFor,
     zipCodeFor,
+    barangaysFor,
   };
 }

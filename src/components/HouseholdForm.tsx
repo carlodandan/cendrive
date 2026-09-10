@@ -105,6 +105,7 @@ function validate(value: HouseholdFormValue): Errors {
   if (!household.region.trim()) errors.region = "Select a region.";
   if (!household.province.trim()) errors.province = "Select a province.";
   if (!household.town.trim()) errors.town = "Select a city or municipality.";
+  if (!household.barangay.trim()) errors.barangay = "Select a barangay.";
 
   for (const member of value.members) {
     const touched =
@@ -180,6 +181,7 @@ export function HouseholdForm({
     selectRegion,
     localitiesFor,
     zipCodeFor,
+    barangaysFor,
   } = useRegionData();
 
   // An existing record already has a region, so its lists load on open.
@@ -190,6 +192,11 @@ export function HouseholdForm({
   const localities = useMemo(
     () => localitiesFor(value.household.province),
     [localitiesFor, value.household.province],
+  );
+
+  const barangays = useMemo(
+    () => barangaysFor(value.household.town),
+    [barangaysFor, value.household.town],
   );
 
   const dirty = useMemo(
@@ -234,6 +241,7 @@ export function HouseholdForm({
         region: region?.name ?? "",
         province: "",
         town: "",
+        barangay: "",
         zipCode: "",
       },
     }));
@@ -252,12 +260,12 @@ export function HouseholdForm({
   };
 
   const handleProvince = (province: string) => {
-    patch({ province, town: "", zipCode: "" });
+    patch({ province, town: "", barangay: "", zipCode: "" });
     clearError("province");
   };
 
   const handleTown = (town: string) => {
-    patch({ town, zipCode: zipCodeFor(value.household.province, town) });
+    patch({ town, barangay: "", zipCode: zipCodeFor(value.household.province, town) });
     clearError("town");
   };
 
@@ -333,7 +341,28 @@ export function HouseholdForm({
               className="col-span-2"
               {...field("streetName")}
             />
-            <TextField label="Barangay" placeholder="e.g. Barangay 12" {...field("barangay")} />
+            <SelectField
+              label="Barangay"
+              required
+              name="barangay"
+              value={value.household.barangay}
+              disabled={submitting || !value.household.town || barangays.length === 0}
+              onChange={(event) => {
+                patch({ barangay: event.target.value });
+                clearError("barangay");
+              }}
+              title={!value.household.town ? "Choose a city or municipality first." : ""}
+              {...(errors.barangay ? { error: errors.barangay } : {})}
+            >
+              <option value="">
+                {regionLoading ? "Loading barangays…" : "Select a barangay"}
+              </option>
+              {barangays.map((bgy) => (
+                <option key={bgy} value={bgy}>
+                  {bgy}
+                </option>
+              ))}
+            </SelectField>
 
             <SelectField
               label="Region"
@@ -362,6 +391,7 @@ export function HouseholdForm({
               value={value.household.province}
               disabled={submitting || !value.regionSlug || Boolean(autoProvince)}
               onChange={(event) => handleProvince(event.target.value)}
+              title={!value.regionSlug ? "Choose a region first." : ""}
               {...(errors.province ? { error: errors.province } : {})}
               {...(autoProvince
                 ? { help: "This region is organised by city and municipality." }
@@ -385,6 +415,7 @@ export function HouseholdForm({
               value={value.household.town}
               disabled={submitting || !value.household.province || localities.length === 0}
               onChange={(event) => handleTown(event.target.value)}
+              title={!value.household.province ? "Choose a province first." : ""}
               {...(errors.town ? { error: errors.town } : {})}
             >
               <option value="">
